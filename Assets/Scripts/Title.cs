@@ -11,14 +11,22 @@ public class Title : MonoBehaviour{
     /// </summary>
     void Start()
     {
-        textMesh = GetComponent<TextMesh>();
-        mainData = GameObject.Find("MainData").GetComponent<MainData>();
     }
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     void Update()
     {
-        textMesh.text = "Minesweeper - " + mainData.mineCount.ToString(); 
+        if(textMesh == null){
+            textMesh = GetComponent<TextMesh>();
+        }
+        if(mainData == null){
+            var mainDataGb = GameObject.Find("MainData");
+            if(mainDataGb != null){
+                mainData = mainDataGb.GetComponent<MainData>();
+            }
+        }else{
+            textMesh.text = "Minesweeper - " + mainData.mineCount.ToString(); 
+        }
     }
 }

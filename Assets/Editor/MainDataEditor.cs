@@ -17,11 +17,11 @@ public class MainDataEditor : Editor {
             for(int j = 0; j < mainData.nowY; j++){
                 int mineData = mainData.GetMineData(i, j); 
                 Handles.color = mineData == -1 ? Color.red : Color.white;
-                if(Handles.Button(mainData.AreaPos(i, j), Quaternion.identity, 0.5f, 0.5f, Handles.RectangleHandleCap)){
+                if(Handles.Button(mainData.AreaPosWorld(i, j), Quaternion.identity, 0.5f, 0.5f, Handles.RectangleHandleCap)){
                     mainData.ReverseMineData(i, j);
                 }
                 
-                Handles.Label(mainData.AreaPos(i, j), mineData.ToString());
+                Handles.Label(mainData.AreaPosWorld(i, j), mineData.ToString());
             }
         }
     }

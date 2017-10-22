@@ -100,6 +100,7 @@
 -define:ENABLE_NATIVE_ARRAY_CHECKS
 -define:UNITY_TEAM_LICENSE
 'Assets/Scripts/AreaHover.cs'
+'Assets/Scripts/AreaView.cs'
 'Assets/Scripts/GamePart.cs'
 'Assets/Scripts/List2D.cs'
 'Assets/Scripts/List2DArounder.cs'

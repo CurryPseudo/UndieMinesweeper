@@ -52,10 +52,12 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AreaHover.cs" />
+     <Compile Include="Assets\Scripts\AreaView.cs" />
      <Compile Include="Assets\Scripts\GamePart.cs" />
      <Compile Include="Assets\Scripts\List2D.cs" />
      <Compile Include="Assets\Scripts\List2DArounder.cs" />
      <Compile Include="Assets\Scripts\MainData.cs" />
+     <Compile Include="Assets\Scripts\NumberView.cs" />
      <Compile Include="Assets\Scripts\Title.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
