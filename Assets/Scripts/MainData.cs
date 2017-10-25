@@ -13,6 +13,7 @@ public class MainData : MonoBehaviour {
 	public bool reGenerate = false;
 	public bool realReGenerate = false;
 	public bool resetMineData = false;
+	public bool randomSetMineData = false;
 	public List2DGameObject areaGbs = null;
 	public List2DInt mineDatas = new List2DInt(0, 0, 0);
 	int[] aroundXs = {-1, 0, 1, -1, 1, -1, 0, 1};
@@ -41,6 +42,10 @@ public class MainData : MonoBehaviour {
 			nextX = tempX;
 			nextY = tempY;
 			ReGenerate();
+		}
+		if(randomSetMineData){
+			randomSetMineData = false;
+			RandomGenerate();
 		}
 	}
 	void ReGenerate(){
@@ -91,7 +96,7 @@ public class MainData : MonoBehaviour {
 	public void SetMineData(int x, int y, int value){
 		Debug.Assert(value == -1 || value == 0);
 		if(mineDatas[x, y] != -1 && value == -1){
-			List2DArounder<int>.ChangeAround(mineDatas, x, y, 
+			mineDatas.ChangeAround(x, y, 
 				(int aroundX, int aroundY, int get)=>{
 					if(get != -1){
 						return get + 1;
@@ -105,7 +110,7 @@ public class MainData : MonoBehaviour {
 		}
 		if(mineDatas[x, y] == -1 && value == 0){
 			int mineNum = 0;
-			List2DArounder<int>.ChangeAround(mineDatas, x, y, 
+			mineDatas.ChangeAround(x, y, 
 				(int aroundX, int aroundY, int get)=>{
 					if(get != -1){
 						return get - 1;
@@ -132,5 +137,17 @@ public class MainData : MonoBehaviour {
 	}
 	public int GetMineData(int x, int y){
 		return mineDatas[x, y];
+	}
+	public void RandomGenerate(){
+		int tempCount = mineCount;
+		ResetMineData();
+		while(tempCount != 0){
+			int x = (int)(Random.value * nowX);
+			int y = (int)(Random.value * nowY);
+			if(mineDatas[x, y] != -1){
+				ReverseMineData(x, y);
+				tempCount--;
+			}
+		}
 	}
 }

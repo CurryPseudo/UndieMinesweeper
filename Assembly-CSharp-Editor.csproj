@@ -51,7 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Editor\EditWithList2DIntEditor.cs" />
+     <Compile Include="Assets\Editor\HappyCheckEditor.cs" />
+     <Compile Include="Assets\Editor\HappyCheckStepEditor.cs" />
      <Compile Include="Assets\Editor\MainDataEditor.cs" />
+     <Compile Include="Assets\Editor\ShowMineResultEditor.cs" />
+     <Compile Include="Assets\Editor\WatchList2DInScene.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>

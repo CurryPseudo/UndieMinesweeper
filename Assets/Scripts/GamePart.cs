@@ -8,6 +8,8 @@ public class GamePart : MonoBehaviour {
     public List2D<AreaView> areaViews = null;
     public float flipDelayTime = 0.3f;
     public float flipTime = 0.5f;
+    public delegate void FlipAction(List<FlipNode> flipNodes);
+    public event FlipAction flipAction;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
@@ -32,6 +34,12 @@ public class GamePart : MonoBehaviour {
     /// </summary>
     void Start()
     {
+        flipAction += 
+            (List<FlipNode> flipNodes)=>{
+                StartCoroutine(Flip(flipNodes));
+                return;
+            };
+        
     }
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
@@ -82,29 +90,17 @@ public class GamePart : MonoBehaviour {
     public void AreaClick(int x, int y){
         Debug.Assert(flipBoard.Inside(x, y));
         Queue BFS = new Queue();
-        /*if(flipBoard[x, y] == 0){
-            if(mineDatas[x, y] == -1){
-
-            }
-            int nowDepth = 0;
-            BFSNode head = new BFSNode(0, x, y);
-            BFS.Enqueue(head);
-            while(BFS.Count > 0){
-                BFSNode node = BFS.Dequeue() as BFSNode;
-                if()
-            }
-        }*/
         List<FlipNode> flipNodes = new List<FlipNode>();
         if(flipBoard[x, y] == 0){
            FlipNode head = new FlipNode(0, x, y, 0);
            BFS.Enqueue(head);
            while(BFS.Count > 0){
                FlipNode node = BFS.Dequeue() as FlipNode;
-               if(flipBoard[node.x, node.y] == 0){
+               if(flipBoard[node.x, node.y] == 0 && mineDatas[node.x, node.y] != -1){
                    flipBoard[node.x, node.y] = 1;
                    flipNodes.Add(node);
                    if(mineDatas[node.x, node.y] == 0){
-                        List2DArounder<int>.ChangeAround(flipBoard, node.x, node.y, 
+                        flipBoard.ChangeAround(node.x, node.y, 
                             (int aroundX, int aroundY, int get)=>{
                                 FlipNode newNode = new FlipNode(node.depth + 1, aroundX, aroundY, node.depth * flipDelayTime);
                                 BFS.Enqueue(newNode);
@@ -115,15 +111,7 @@ public class GamePart : MonoBehaviour {
                }
            }
         }
-        StartCoroutine(Flip(flipNodes));
-    }
-}
-public class FlipInfo{
-    public int endIndex;
-    public float delayTime;
-    public FlipInfo(int _endIndex, float _delayTime){
-        endIndex = _endIndex;
-        delayTime = _delayTime;
+        flipAction.Invoke(flipNodes);
     }
 }
 public class FlipNode{
