@@ -10,6 +10,8 @@ public class GamePart : MonoBehaviour {
     public float flipTime = 0.5f;
     public delegate void FlipAction(List<FlipNode> flipNodes);
     public event FlipAction flipAction;
+    public delegate void ClickAction(IndexOfList2D clickPos);
+    public event ClickAction clickAction;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
@@ -89,6 +91,9 @@ public class GamePart : MonoBehaviour {
     }
     public void AreaClick(int x, int y){
         Debug.Assert(flipBoard.Inside(x, y));
+        if(clickAction != null){
+            clickAction.Invoke(new IndexOfList2D(x, y));
+        }
         Queue BFS = new Queue();
         List<FlipNode> flipNodes = new List<FlipNode>();
         if(flipBoard[x, y] == 0){
@@ -111,7 +116,9 @@ public class GamePart : MonoBehaviour {
                }
            }
         }
-        flipAction.Invoke(flipNodes);
+        if(flipAction != null){
+            flipAction.Invoke(flipNodes);
+        }
     }
 }
 public class FlipNode{

@@ -20,17 +20,20 @@ public class HappyCheckStep : MonoBehaviour {
 	WatchList2DInScene watchList;
 	public bool isHappy = false;
 	public int[] happyMap;
-	public List<List<int>> checkResults;
+	public List<List<int>> checkResults = new List<List<int>>();
 	public StepResult stepResult = StepResult.NORMAL;
+	public event GamePart.ClickAction clickAction;
 	void Start () {
 		happyCheck = transform.parent.GetComponentInChildren<HappyCheck>();
 		var md = GameObject.Find("MainData");
 		var gamePart = md.GetComponent<GamePart>();
-		gamePart.flipAction += stepInit;
 		GameObject debugWithMap = new GameObject("Map");
+		gamePart.clickAction += ProcessAfterClick;
+		gamePart.flipAction += ProcessAfterFlip;
 		debugWithMap.transform.parent = transform;
 		watchList = debugWithMap.AddComponent(typeof(WatchList2DInScene)) as WatchList2DInScene;
-		stepInit(null);
+		StepInit();
+		CheckHappy();
 	}
 	
 	// Update is called once per frame
@@ -53,7 +56,7 @@ public class HappyCheckStep : MonoBehaviour {
 		if(backToStart){
 			backToStart = false;
 			Process();
-			stepInit(null);
+			StepInit();
 		}
 		if(checkHappy){
 			checkHappy = false;
@@ -68,7 +71,18 @@ public class HappyCheckStep : MonoBehaviour {
 		}
 		
 	}
-	public void stepInit(List<FlipNode> nodes){
+	public void ProcessAfterClick(IndexOfList2D clickPos){
+		if(isHappy){
+			if(clickAction != null){
+				clickAction.Invoke(clickPos);
+			}
+		}
+	}
+	public void ProcessAfterFlip(List<FlipNode> flipNodes){
+		StepInit();
+		ProcessWithCheckHappy();
+	}
+	public void StepInit(){
 		ufaMap = new List2DInt(happyCheck.mineDatas.XSize, happyCheck.mineDatas.YSize, -1);
 		watchList.list = ufaMap;
 		ufaIndexes = new int[happyCheck.unFlipAreaList.Count];
@@ -91,6 +105,36 @@ public class HappyCheckStep : MonoBehaviour {
 		foreach(var resultGb in resultGbs){
 			Destroy(resultGb);
 		}
+	}
+	
+	public void ProcessWithCheckHappy(){
+		isHappy = false;
+		int[] resultCacMap = new int[happyCheck.unFlipAreaList.Count];
+		for(int i = 0; i < resultCacMap.Length; i++){
+			resultCacMap[i] = 0;
+		}
+		int mineCountLeft = resultCacMap.Length;
+		StepResult result = StepResult.NORMAL;
+		while(result != StepResult.END){
+			result = Step();
+			while(result != StepResult.GETRESULT && result != StepResult.END){
+				result = Step();
+			}
+			if(result != StepResult.END){
+				var oneCheckResult = checkResults[checkResults.Count - 1];
+				foreach(var index in oneCheckResult){
+					if(resultCacMap[index] == 0){
+							mineCountLeft--;
+						resultCacMap[index] = 1;
+					}
+				}
+			}
+			if(mineCountLeft == 0){
+				isHappy = true;
+				break;
+			}
+		}
+		happyCheck.resetNumbersValue();
 	}
 	public void Process(){
 		while(Step() != StepResult.END);
@@ -142,7 +186,7 @@ public class HappyCheckStep : MonoBehaviour {
 						}
 					}
 					stepResult = StepResult.PUTMINE;
-					if(numberCount == 0 && stack.Count <= MainDataSingleton.value.mineCount){
+					if(numberCount == 0 && stack.Count <= MainDataSingleton.value.mineCount && stack.Count + happyCheck.unFlipAreaInsideList.Count >= MainDataSingleton.value.mineCount){
 						List<int> oneResult = new List<int>(stack);
 						checkResults.Add(oneResult);
 						stepResult = StepResult.GETRESULT;

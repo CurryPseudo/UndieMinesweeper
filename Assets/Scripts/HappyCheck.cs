@@ -8,15 +8,25 @@ public class HappyCheck : MonoBehaviour {
 	// Use this for initialization
 	[System.NonSerialized]
 	public List2DInt map = null;
+	public List2DInt insideMap = null;
 	public SmartList<HCArea> numberList = null;
 	public SmartList<HCArea> unFlipAreaList = null;
+	public SmartList<IndexOfList2D> unFlipAreaInsideList = null;
+	public int insideUfaCount = 0;
 	void Awake () {
 		var md = GameObject.Find("MainData");
 		mineDatas = md.GetComponent<MainData>().mineDatas;
 		flipBoard = md.GetComponent<GamePart>().flipBoard;
 		map = new List2DInt(mineDatas.XSize, mineDatas.YSize, -1);
+		insideMap = new List2DInt(mineDatas.XSize, mineDatas.YSize, -1);
 		numberList = new SmartList<HCArea>();
 		unFlipAreaList = new SmartList<HCArea>();
+		unFlipAreaInsideList = new SmartList<IndexOfList2D>();
+		for(int i = 0; i < map.XSize; i++){
+			for(int j = 0; j < map.YSize; j++){
+				insideMap[i, j] = unFlipAreaInsideList.Add(new IndexOfList2D(i, j));
+			}
+		}
 		var gamePart = md.GetComponent<GamePart>();
 		gamePart.flipAction += ChangeMapByFlip;
 		
@@ -24,7 +34,10 @@ public class HappyCheck : MonoBehaviour {
 		debugWithMap.transform.parent = transform;
 		debugWithMap.AddComponent(typeof(WatchList2DInScene));
 		debugWithMap.GetComponent<WatchList2DInScene>().list = map;
-		
+		debugWithMap = new GameObject("InsideMap");
+		debugWithMap.transform.parent = transform;
+		debugWithMap.AddComponent(typeof(WatchList2DInScene));
+		debugWithMap.GetComponent<WatchList2DInScene>().list = insideMap;
 		
 	}
 	public void AddUnflipArea(HCArea ufa){
@@ -32,6 +45,11 @@ public class HappyCheck : MonoBehaviour {
 	}
 	public void AddNumber(HCArea number){
 		map[number.pos] = -2 - numberList.Add(number);
+	}
+	public void resetNumbersValue(){
+		foreach(var number in numberList){
+			number.value = MainDataSingleton.value.mineDatas[number.pos];
+		}
 	}
 	public HCArea GetHCArea(int x, int y){
 		if(map[x, y] > -1){
@@ -61,15 +79,20 @@ public class HappyCheck : MonoBehaviour {
 					}
 				}
 				RemoveUnflipArea(ufa);
+			}else{
+				unFlipAreaInsideList.RemoveAt(insideMap[node.x, node.y]);
+				insideMap[node.x, node.y] = -1;
 			}
 			List<HCArea> aroundUfa = new List<HCArea>();
-			HCArea number = new HCArea(mineDatas[node.x, node.y], new List2DIndex(node.x, node.y), aroundUfa);
+			HCArea number = new HCArea(mineDatas[node.x, node.y], new IndexOfList2D(node.x, node.y), aroundUfa);
 			flipBoard.ChangeAround(node.x, node.y,
 				(int x, int y, int get)=>{
 					if(get == 0){
 						HCArea ufa = GetHCArea(x, y);
 						if(ufa == null){
-							ufa = new HCArea(-1, new List2DIndex(x, y), new List<HCArea>());
+							ufa = new HCArea(-1, new IndexOfList2D(x, y), new List<HCArea>());
+							unFlipAreaInsideList.RemoveAt(insideMap[ufa.pos]);
+							insideMap[ufa.pos] = -1;
 							AddUnflipArea(ufa);
 						}
 						ufa.neighbours.Add(number);
@@ -138,9 +161,9 @@ public class HappyCheck : MonoBehaviour {
 }
 public class HCArea{
 	public int value;
-	public List2DIndex pos;
+	public IndexOfList2D pos;
 	public List<HCArea> neighbours;
-	public HCArea(int _value, List2DIndex _pos, List<HCArea> _neighbours){
+	public HCArea(int _value, IndexOfList2D _pos, List<HCArea> _neighbours){
 		pos = _pos;
 		neighbours = _neighbours;
 		value = _value;

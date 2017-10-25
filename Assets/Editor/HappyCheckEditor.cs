@@ -27,6 +27,7 @@ public class HappyCheckEditor : Editor {
                     if(Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
                         now = ufa;
                     }   
+                    Handles.Label(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), ufa.value.ToString());
                 }   
             }
         }else{
@@ -41,7 +42,6 @@ public class HappyCheckEditor : Editor {
             if(Handles.Button(mainData.AreaPosWorld(now.pos.x, now.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
                 now = null;
             }   
-            
         }
         
         

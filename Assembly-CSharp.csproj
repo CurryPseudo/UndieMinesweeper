@@ -56,6 +56,7 @@
      <Compile Include="Assets\Scripts\GamePart.cs" />
      <Compile Include="Assets\Scripts\HappyCheck.cs" />
      <Compile Include="Assets\Scripts\HappyCheckStep.cs" />
+     <Compile Include="Assets\Scripts\HappyClick.cs" />
      <Compile Include="Assets\Scripts\List2D.cs" />
      <Compile Include="Assets\Scripts\MainData.cs" />
      <Compile Include="Assets\Scripts\MainDataSingleton.cs" />

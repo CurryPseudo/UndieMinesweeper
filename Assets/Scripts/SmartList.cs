@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class SmartList<T> : IEnumerable{
-    List<T> items;
-    HashSet<int> emptyIndex;
+    public List<T> items;
+    public HashSet<int> emptyIndex;
     public SmartList(){
         items = new List<T>();
         emptyIndex = new HashSet<int>();
+    }
+    public SmartList(SmartList<T> otherList){
+        items = new List<T>(otherList.items);
+        emptyIndex = new HashSet<int>(otherList.emptyIndex);
     }
     public int Count{
         get{

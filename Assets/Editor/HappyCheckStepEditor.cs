@@ -21,25 +21,23 @@ public class HappyCheckStepEditor : Editor {
         }
         if(happyCheckStep.ufaMap == null) return;
         if(happyCheckStep.sortIndex < happyCheckStep.ufaIndexes.Length){
-            HCArea ufa = getUfa(happyCheckStep.sortIndex);
+            HCArea ufa = happyCheckStep.GetUfa(happyCheckStep.sortIndex);
             Handles.color = Color.yellow;
             Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap);
         }
         foreach(var index in happyCheckStep.stack){
-            HCArea ufa = getUfa(index);
+            HCArea ufa = happyCheckStep.GetUfa(index);
             Handles.color = happyCheckStep.numberCount == 0 ? Color.green : Color.red;
             Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap);
         }
         for(int i = 0; i < happyCheckStep.ufaIndexes.Length; i++){
-            if(happyCheckStep.ufaMap[getUfa(i).pos] == 1){
-                HCArea ufa = getUfa(i);
+            if(happyCheckStep.ufaMap[happyCheckStep.GetUfa(i).pos] == 1){
+                HCArea ufa = happyCheckStep.GetUfa(i);
                 Handles.color = Color.grey;
                 Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.ArrowHandleCap);
             }
         }
         
     }
-    HCArea getUfa(int index){
-        return happyCheckStep.happyCheck.unFlipAreaList[happyCheckStep.ufaIndexes[index]];
-    }
+    
 }

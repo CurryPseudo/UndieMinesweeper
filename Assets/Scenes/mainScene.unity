@@ -1732,6 +1732,7 @@ MonoBehaviour:
   reGenerate: 0
   realReGenerate: 0
   resetMineData: 0
+  randomSetMineData: 0
   areaGbs:
     xSize: 10
     ySize: 10
@@ -1839,8 +1840,8 @@ MonoBehaviour:
   mineDatas:
     xSize: 10
     ySize: 10
-    list: 00000000000000000100000001000000010000000000000001000000010000000100000000000000000000000000000001000000ffffffff030000000300000003000000ffffffff010000000000000001000000010000000300000003000000ffffffffffffffffffffffff03000000030000000100000001000000ffffffff02000000ffffffff030000000300000003000000ffffffff02000000ffffffff01000000010000000300000002000000030000000100000003000000020000000300000001000000000000000000000001000000ffffffff03000000ffffffff03000000ffffffff010000000000000000000000000000000200000003000000ffffffff03000000ffffffff030000000200000000000000000000000000000001000000ffffffff020000000200000002000000ffffffff01000000000000000000000000000000010000000100000001000000000000000100000001000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  mineCount: 16
+    list: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000002000000030000000300000003000000020000000100000000000000000000000000000002000000ffffffffffffffffffffffffffffffffffffffff0200000000000000000000000000000003000000ffffffffffffffffffffffffffffffffffffffff0300000000000000000000000000000002000000ffffffffffffffffffffffffffffffffffffffff02000000000000000000000000000000010000000200000003000000030000000300000002000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  mineCount: 15
 --- !u!4 &209315202
 Transform:
   m_ObjectHideFlags: 0
@@ -5628,7 +5629,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 700486517}
-  m_Text: Minesweeper - 16
+  m_Text: Minesweeper - 3
   m_OffsetZ: 0
   m_CharacterSize: 0.1
   m_LineSpacing: 1
@@ -6331,6 +6332,49 @@ Transform:
   m_Father: {fileID: 209315202}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &853920462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 853920463}
+  - component: {fileID: 853920464}
+  m_Layer: 0
+  m_Name: HappyClick
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &853920463
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 853920462}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1295339147}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &853920464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 853920462}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d230ee9a9e5e44498b04d23a30aadf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happyCheck: {fileID: 0}
+  happyCheckStep: {fileID: 0}
+  watchList: {fileID: 0}
 --- !u!1 &861196304
 GameObject:
   m_ObjectHideFlags: 0
@@ -9731,6 +9775,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1526428028}
+  - {fileID: 1759359835}
+  - {fileID: 853920463}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12233,6 +12279,11 @@ MonoBehaviour:
     xSize: 0
     ySize: 0
     list: 
+  insideMap:
+    xSize: 0
+    ySize: 0
+    list: 
+  insideUfaCount: 0
 --- !u!4 &1526428028
 Transform:
   m_ObjectHideFlags: 0
@@ -13675,6 +13726,60 @@ Transform:
   m_Father: {fileID: 209315202}
   m_RootOrder: 45
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1759359834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1759359835}
+  - component: {fileID: 1759359836}
+  m_Layer: 0
+  m_Name: HappyCheckStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1759359835
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1759359834}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1295339147}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1759359836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1759359834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4fe90cf5ccdf42248270ef77b30714d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happyCheck: {fileID: 0}
+  step: 0
+  bigStep: 0
+  mineStep: 0
+  process: 0
+  backToStart: 0
+  checkHappy: 0
+  ufaIndexes: 
+  numberCount: 0
+  stack: 
+  sortIndex: 0
+  isHappy: 0
+  happyMap: 
+  stepResult: 0
 --- !u!1 &1765242773
 GameObject:
   m_ObjectHideFlags: 0
