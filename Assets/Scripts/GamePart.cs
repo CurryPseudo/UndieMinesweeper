@@ -125,6 +125,11 @@ public class FlipNode{
     public int depth;
     public int x;
     public int y;
+    public IndexOfList2D pos{
+        get{
+            return new IndexOfList2D(x, y);
+        }
+    }
     public float startFlipTime;
     public FlipNode(int _depth, int _x, int _y, float _startFlipTime){
         depth = _depth;

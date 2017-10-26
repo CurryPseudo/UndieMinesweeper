@@ -87,8 +87,11 @@ public class MainData : MonoBehaviour {
 	public Vector3 AreaPosLocal(int x, int y){
 		return (Vector3.right * x - Vector3.up * y) * step;
 	}
+	public Vector3 AreaPosWorld(IndexOfList2D pos){
+		return AreaPosWorld(pos.x, pos.y);
+	}	
 	public Vector3 AreaPosWorld(int x, int y){
-		return transform.position + AreaPosLocal(x, y);
+		return transform.TransformPoint((Vector3.right * x - Vector3.up * y) * step);
 	}
 	public int ListIndex(int x, int y){
 		return y * nowX + x;

@@ -51,9 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Editor\Algorithm1\HappyCheckEditor.cs" />
+     <Compile Include="Assets\Editor\Algorithm1\HappyCheckStepEditor.cs" />
+     <Compile Include="Assets\Editor\Algorithm2\SearchForCaEditor.cs" />
+     <Compile Include="Assets\Editor\Algorithm2\ShowCaEditor.cs" />
+     <Compile Include="Assets\Editor\Algorithm2\ShowPositionsEditor.cs" />
      <Compile Include="Assets\Editor\EditWithList2DIntEditor.cs" />
-     <Compile Include="Assets\Editor\HappyCheckEditor.cs" />
-     <Compile Include="Assets\Editor\HappyCheckStepEditor.cs" />
      <Compile Include="Assets\Editor\MainDataEditor.cs" />
      <Compile Include="Assets\Editor\ShowMineResultEditor.cs" />
      <Compile Include="Assets\Editor\WatchList2DInScene.cs" />

@@ -90,4 +90,8 @@ public class IndexOfList2D{
         x = _x;
         y = _y;
     }
+    public IndexOfList2D(IndexOfList2D other){
+        x = other.x;
+        y = other.y;
+    }
 }

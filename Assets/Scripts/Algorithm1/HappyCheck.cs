@@ -16,7 +16,8 @@ public class HappyCheck : MonoBehaviour {
 	void Awake () {
 		var md = GameObject.Find("MainData");
 		mineDatas = md.GetComponent<MainData>().mineDatas;
-		flipBoard = md.GetComponent<GamePart>().flipBoard;
+		var gamePart = md.GetComponent<GamePart>();
+		flipBoard = gamePart.flipBoard;
 		map = new List2DInt(mineDatas.XSize, mineDatas.YSize, -1);
 		insideMap = new List2DInt(mineDatas.XSize, mineDatas.YSize, -1);
 		numberList = new SmartList<HCArea>();
@@ -27,7 +28,6 @@ public class HappyCheck : MonoBehaviour {
 				insideMap[i, j] = unFlipAreaInsideList.Add(new IndexOfList2D(i, j));
 			}
 		}
-		var gamePart = md.GetComponent<GamePart>();
 		gamePart.flipAction += ChangeMapByFlip;
 		
 		GameObject debugWithMap = new GameObject("Map");
@@ -48,7 +48,7 @@ public class HappyCheck : MonoBehaviour {
 	}
 	public void resetNumbersValue(){
 		foreach(var number in numberList){
-			number.value = MainDataSingleton.value.mineDatas[number.pos];
+			number.value = Singleton.MainData.mineDatas[number.pos];
 		}
 	}
 	public HCArea GetHCArea(int x, int y){
@@ -69,6 +69,7 @@ public class HappyCheck : MonoBehaviour {
 		map[number.pos] = -1;
 	}
 	public void ChangeMapByFlip(List<FlipNode> flipNodes){
+		flipBoard = Singleton.GamePart.flipBoard;
 		foreach(var node in flipNodes){
 			if(map[node.x, node.y] != -1){
 				var ufa = GetHCArea(node.x, node.y);

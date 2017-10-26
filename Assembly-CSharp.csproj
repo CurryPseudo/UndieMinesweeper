@@ -51,17 +51,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Algorithm1\HappyCheck.cs" />
+     <Compile Include="Assets\Scripts\Algorithm1\HappyCheckStep.cs" />
+     <Compile Include="Assets\Scripts\Algorithm1\HappyClick.cs" />
+     <Compile Include="Assets\Scripts\Algorithm2\Precalculate.cs" />
+     <Compile Include="Assets\Scripts\Algorithm2\SearchForCa.cs" />
+     <Compile Include="Assets\Scripts\Algorithm2\ShowCa.cs" />
+     <Compile Include="Assets\Scripts\Algorithm2\ShowPositions.cs" />
      <Compile Include="Assets\Scripts\AreaHover.cs" />
      <Compile Include="Assets\Scripts\AreaView.cs" />
      <Compile Include="Assets\Scripts\GamePart.cs" />
-     <Compile Include="Assets\Scripts\HappyCheck.cs" />
-     <Compile Include="Assets\Scripts\HappyCheckStep.cs" />
-     <Compile Include="Assets\Scripts\HappyClick.cs" />
      <Compile Include="Assets\Scripts\List2D.cs" />
      <Compile Include="Assets\Scripts\MainData.cs" />
-     <Compile Include="Assets\Scripts\MainDataSingleton.cs" />
      <Compile Include="Assets\Scripts\NumberView.cs" />
      <Compile Include="Assets\Scripts\ShowMineResult.cs" />
+     <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\SmartList.cs" />
      <Compile Include="Assets\Scripts\Title.cs" />
      <Compile Include="Assets\Scripts\WatchList2DInScene.cs" />

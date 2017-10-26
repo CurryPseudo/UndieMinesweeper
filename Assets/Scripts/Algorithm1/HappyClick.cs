@@ -22,7 +22,7 @@ public class HappyClick : MonoBehaviour {
 	}
 	
 	public void changeMineDataForHappy(IndexOfList2D clickPos){
-		List2DInt map = new List2DInt(MainDataSingleton.value.nowX, MainDataSingleton.value.nowY, 0);
+		List2DInt map = new List2DInt(Singleton.MainData.nowX, Singleton.MainData.nowY, 0);
 		outsideUfas = new List<IndexOfList2D>();
 		insideUfas = new List<IndexOfList2D>();
 		foreach(var ufa in happyCheck.unFlipAreaList){
@@ -39,7 +39,7 @@ public class HappyClick : MonoBehaviour {
 		if(map[clickPos] != -1){
 			if(results.Count > 0){
 				for(int i = 0; i < results.Count; i++){
-					needPutMineCount = MainDataSingleton.value.mineCount - results[i].Count;
+					needPutMineCount = Singleton.MainData.mineCount - results[i].Count;
 					if(needPutMineCount <= insideUfas.Count){
 						trueResult = results[i];
 						break;
@@ -47,7 +47,7 @@ public class HappyClick : MonoBehaviour {
 				}
 			}else{
 				trueResult = new List<int>();
-				needPutMineCount = MainDataSingleton.value.mineCount;
+				needPutMineCount = Singleton.MainData.mineCount;
 			}
 		}else{
 			for(int i = 0; i < results.Count; i++){
@@ -78,7 +78,7 @@ public class HappyClick : MonoBehaviour {
 			map[pos] = -1;
 		}
 		watchList.list = map;
-		var mainData = MainDataSingleton.value;
+		var mainData = Singleton.MainData;
 		foreach(var ufa in happyCheck.unFlipAreaList){
 			mainData.SetMineData(ufa.pos.x, ufa.pos.y, map[ufa.pos]);
 		}
