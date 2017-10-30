@@ -83,6 +83,7 @@ public class List2DInt : List2D<int> {
 public class List2DGameObject : List2D<GameObject> {
     public List2DGameObject(int _xSize, int _ySize, GameObject t) : base(_xSize, _ySize, t){}
 }
+[System.Serializable]
 public class IndexOfList2D{
     public int x;
     public int y;

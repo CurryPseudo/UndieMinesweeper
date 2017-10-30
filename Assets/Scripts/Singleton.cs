@@ -38,4 +38,13 @@ public class Singleton{
     public static void DrawABeaultifulLabel(IndexOfList2D pos, string text){
         Handles.Label(MainData.AreaPosWorld(pos), text);
     }
+    public static void DestroyAllChilds(Transform parent){
+        int count = parent.childCount;
+		for(int i = count - 1; i >= 0; i--){
+			GameObject.Destroy(parent.GetChild(i).gameObject);
+		}
+    }
+    public static List2DInt CreateNewList2DInt(){
+        return new List2DInt(mainData.nowX, mainData.nowY, 0);
+    }
 }

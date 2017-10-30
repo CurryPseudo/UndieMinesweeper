@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-[CustomEditor(typeof(SearchForCa))]
+[CustomEditor(typeof(SearchForCaMB))]
 public class SearchForCaEditor : Editor {
 
 	public SearchForCa searchForCa = null;
@@ -12,7 +12,7 @@ public class SearchForCaEditor : Editor {
 	// Use this for initialization
 	public void OnSceneGUI(){
 		if(searchForCa == null){
-			searchForCa = target as SearchForCa;
+			searchForCa = (target as SearchForCaMB).searchForCa;
 		}
 		if(mainData == null){
 			mainData = Singleton.MainData;

@@ -9,11 +9,11 @@ public class ShowPositionsEditor : Editor {
 		if(showPositions == null){
 			showPositions = target as ShowPositions;
 		}
-		if(showPositions.positions != null){
-			foreach(var pos in showPositions.positions){
-				Singleton.DrawABeaultifulButton(pos, Color.green, null);
+		foreach(var positions in showPositions.positionsList){
+			foreach(var pos in positions.positions){
+				Singleton.DrawABeaultifulButton(pos, positions.color, null);
 			}
+
 		}
-		
 	}
 }

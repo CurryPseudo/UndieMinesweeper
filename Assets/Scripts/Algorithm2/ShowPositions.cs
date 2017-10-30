@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class ShowPositions : MonoBehaviour {
 
-	public List<IndexOfList2D> positions;
+	public class PositionProperty{
+		public List<IndexOfList2D> positions;
+		public Color color;
+		public PositionProperty(List<IndexOfList2D> _positions, Color _color){
+			positions = _positions;
+			color = _color;
+		}
+	}
+	public List<PositionProperty> positionsList = new List<PositionProperty>();
 	// Use this for initialization
 	void Start () {
 		

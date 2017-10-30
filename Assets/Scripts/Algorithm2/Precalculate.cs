@@ -9,29 +9,28 @@ public class Precalculate : MonoBehaviour {
 	public MainData mainData;
 	public GamePart gamePart;
 	public event System.Action afterPrecacAction;
+	public Dictionary<ConnectedAreas, SearchForCa> problemsAndResults;
 	void Awake () {
 		mainData = Singleton.MainData;
 		gamePart = Singleton.GamePart;
 		gamePart.flipAction += Flip;
 		tableBase = new PrecacTableBase(mainData.nowX, mainData.nowY);
-		tableBase.cas.addCaAction += DebugCreateShowCa;
-		tableBase.cas.removeCaAction += DebugRemoveShowCa;
+		
 	}
-	public void DebugCreateShowCa(ConnectedAreas ca){
-		GameObject gb = new GameObject("ConnectedArea");
-		var showCa = gb.AddComponent<ShowCa>();
-		showCa.ca = ca;
-		gb.transform.parent = transform;
-		GameObject gbchild = new GameObject("Search");
-		gbchild.transform.parent = gb.transform;
-		SearchForCa sfc = gbchild.AddComponent<SearchForCa>();
-	}
-	public void DebugRemoveShowCa(ConnectedAreas ca){
-		var showCas = GetComponentsInChildren<ShowCa>();
-		foreach(var showCa in showCas){
-			if(showCa.ca == ca){
-				Destroy(showCa.gameObject);
-			}
+	
+	public void visualizedData(){
+		Singleton.DestroyAllChilds(transform);
+		int caIndex = 0;
+		foreach(var ca in tableBase.cas.list){
+			GameObject caGb = new GameObject("ConnectedArea " + caIndex.ToString());
+			caGb.transform.parent = transform;
+			ShowCa sca = caGb.AddComponent<ShowCa>();
+			sca.ca = ca;
+			GameObject searchGb = new GameObject("Search");
+			searchGb.transform.parent = caGb.transform;
+			SearchForCaMB sfca = searchGb.AddComponent<SearchForCaMB>();
+			sfca.searchForCa = problemsAndResults[ca];
+			caIndex++;
 		}
 	}
 	public void Flip(List<FlipNode> flipNodes){
@@ -64,6 +63,12 @@ public class Precalculate : MonoBehaviour {
 				tableBase.cas.Remove(ca);
 			}	
 		}
+		problemsAndResults = new Dictionary<ConnectedAreas, SearchForCa>();
+		foreach(var ca in tableBase.cas.list){
+			problemsAndResults[ca] = new SearchForCa(ca);
+			problemsAndResults[ca].Process();
+		}
+		visualizedData();
 		if(afterPrecacAction != null){
 			afterPrecacAction();
 		}

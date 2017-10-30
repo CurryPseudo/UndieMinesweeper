@@ -1,13 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SearchForCa : MonoBehaviour {
-	public bool step = false;
-	public bool process = false;
-	public bool processWithDelayTime = false;
-	public bool stopProcess = false;
-	public bool backToStart = false;
+[System.Serializable]
+public class SearchForCa{
+public bool isDead = false;
 	public ConnectedAreas ca;
 	public Dictionary<Area, int> areaIndexTable;
 	public int numberCount = 0;
@@ -20,72 +16,30 @@ public class SearchForCa : MonoBehaviour {
 	public Dictionary<int, List<List<IndexOfList2D>>> searchResults;
 	// Use this for initialization
 	public SearchingStepResult stepResult = SearchingStepResult.ORIGIN;
-	public event System.Action<List<IndexOfList2D>> afterGetResultAction;
-	public Precalculate precac;
-	public float processDelayTime = 0.5f;
-	void Start () {
-		precac = GetComponentInParent<Precalculate>();
-		precac.afterPrecacAction += RefreshCa;
-		afterGetResultAction += DebugCreateShowPosition;
-		RefreshCa();
+    public SearchForCa(ConnectedAreas _ca){
+        SearchInit(_ca);
+    }
+
+	public void CheckDead(){
+		List2DInt deadMap = new List2DInt(Singleton.MainData.nowX, Singleton.MainData.nowY, 0);
+        int outsideCount = ca.outsides.Count;
+        foreach(var keyAndValue in searchResults){
+            foreach(var positions in keyAndValue.Value){
+                foreach(var position in positions){
+                    if(deadMap[position] == 0){
+                        deadMap[position] = 1;
+                        outsideCount--;
+                    }
+                }
+            }
+        }
+        isDead = outsideCount == 0;
 	}
-	public void RefreshCa(){
-		var showCa =transform.parent.gameObject.GetComponent<ShowCa>();
-		if(showCa != null){
-			SearchInit(showCa.ca);
-		}
-	}
-	public void DebugCreateShowPosition(List<IndexOfList2D> result){
-		GameObject gb = new GameObject("StepResult");
-		var showPositions = gb.AddComponent<ShowPositions>();
-		showPositions.positions = result;
-		gb.transform.parent = transform;
-	}
-	/// <summary>
-	/// Update is called every frame, if the MonoBehaviour is enabled.
-	/// </summary>
-	void Update()
-	{
-		if(step){
-			step = false;
-			Step();
-		}
-		if(process){
-			process= false;
-			while(stepResult != SearchingStepResult.END){
-				Step();
-			}
-		}
-		if(backToStart){
-			backToStart = false;
-			if(ca != null){
-				SearchInit(ca);
-			}
-		}
-		if(processWithDelayTime){
-			processWithDelayTime = false;
-			StartCoroutine(ProcessWithDelayTime());
-		}
-		if(stopProcess){
-			stopProcess = false;
-			StopAllCoroutines();
-		}
-	}
-	/// <summary>
-	/// This function is called when the MonoBehaviour will be destroyed.
-	/// </summary>
-	void OnDestroy()
-	{
-		precac = GetComponentInParent<Precalculate>();
-		if(precac != null){
-			precac.afterPrecacAction -= RefreshCa;
-		}
-	}
-	IEnumerator ProcessWithDelayTime(){
+	public void Process(){
 		while(stepResult != SearchingStepResult.END){
 			Step();
-			yield return new WaitForSeconds(processDelayTime);
 		}
+        CheckDead();
 	}
 	public void SearchInit(ConnectedAreas _ca){
 		ca = _ca;
@@ -114,10 +68,7 @@ public class SearchForCa : MonoBehaviour {
 		searchResults = new Dictionary<int, List<List<IndexOfList2D>>>();
 		stepResult = SearchingStepResult.ORIGIN;
 
-		ShowPositions[] showPositionsArray = GetComponentsInChildren<ShowPositions>();
-		foreach(var showPositions in showPositionsArray){
-			Destroy(showPositions.gameObject);
-		}
+		isDead = false;
 	}
 	public void Step(){
 		if(stepResult == SearchingStepResult.GETRESULT){
@@ -134,9 +85,6 @@ public class SearchForCa : MonoBehaviour {
 				searchResults[mineCount] = new List<List<IndexOfList2D>>();
 			}
 			searchResults[mineCount].Add(oneResult);
-			if(afterGetResultAction != null){
-				afterGetResultAction(oneResult);
-			}
 			stepResult = SearchingStepResult.GETRESULT;
 		}else
 		if(pointForEachNumber[numberIndex] == 0){
