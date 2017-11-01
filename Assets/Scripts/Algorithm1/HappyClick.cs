@@ -22,7 +22,7 @@ public class HappyClick : MonoBehaviour {
 	}
 	
 	public void changeMineDataForHappy(IndexOfList2D clickPos){
-		List2DInt map = new List2DInt(Singleton.MainData.nowX, Singleton.MainData.nowY, 0);
+		List2DInt map = new List2DInt(Singleton.MainData.XSize, Singleton.MainData.YSize, 0);
 		outsideUfas = new List<IndexOfList2D>();
 		insideUfas = new List<IndexOfList2D>();
 		foreach(var ufa in happyCheck.unFlipAreaList){

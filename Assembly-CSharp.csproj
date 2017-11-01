@@ -63,14 +63,18 @@
      <Compile Include="Assets\Scripts\Algorithm2\ShowPositions.cs" />
      <Compile Include="Assets\Scripts\AreaHover.cs" />
      <Compile Include="Assets\Scripts\AreaView.cs" />
+     <Compile Include="Assets\Scripts\FlagPart.cs" />
      <Compile Include="Assets\Scripts\GamePart.cs" />
      <Compile Include="Assets\Scripts\List2D.cs" />
      <Compile Include="Assets\Scripts\MainData.cs" />
+     <Compile Include="Assets\Scripts\MainDataMB.cs" />
      <Compile Include="Assets\Scripts\NumberView.cs" />
      <Compile Include="Assets\Scripts\ShowMineResult.cs" />
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\SmartList.cs" />
-     <Compile Include="Assets\Scripts\Title.cs" />
+     <Compile Include="Assets\Scripts\Titles\Title.cs" />
+     <Compile Include="Assets\Scripts\Titles\TitleButtonDown.cs" />
+     <Compile Include="Assets\Scripts\Titles\TittleButtonChangeView.cs" />
      <Compile Include="Assets\Scripts\WatchList2DInScene.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>

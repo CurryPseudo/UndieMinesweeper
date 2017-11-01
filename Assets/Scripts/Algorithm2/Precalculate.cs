@@ -10,12 +10,18 @@ public class Precalculate : MonoBehaviour {
 	public GamePart gamePart;
 	public event System.Action afterPrecacAction;
 	public Dictionary<ConnectedAreas, SearchForCa> problemsAndResults;
-	void Awake () {
+	public void Init(){
 		mainData = Singleton.MainData;
 		gamePart = Singleton.GamePart;
+		tableBase = new PrecacTableBase(mainData.XSize, mainData.YSize);
+		problemsAndResults = new Dictionary<ConnectedAreas, SearchForCa>();
+		Flip(new List<FlipNode>());
+		visualizedData();
+	}
+	void Awake () {
+		Init();
 		gamePart.flipAction += Flip;
-		tableBase = new PrecacTableBase(mainData.nowX, mainData.nowY);
-		
+		gamePart.initAction += Init;
 	}
 	
 	public void visualizedData(){

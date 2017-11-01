@@ -5,11 +5,10 @@ using UnityEngine;
 public class AreaHover : MonoBehaviour {
     SpriteRenderer renderer;
     Color originColor;
-    Color hoverColor;
+    public Color hoverColor;
 	void Start () {
         renderer = GetComponent<SpriteRenderer>();
         originColor = renderer.color;
-        hoverColor = new Color(renderer.color.r, renderer.color.g * 1.2f, renderer.color.b);
 	}
 	void Update () {
 		

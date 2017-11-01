@@ -1,88 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[ExecuteInEditMode]
-public class MainData : MonoBehaviour {
-	[Header("MineAreaSize")]
-	public int nextX = 10;
-	public int nowX = 0;
-	public int nextY = 10;
-	public int nowY = 0;
+[System.Serializable]
+public class MainData{
+	public MainDataMB mb;
 	public float step = 1.06f;
-	// Use this for initialization
-	public bool reGenerate = false;
-	public bool realReGenerate = false;
-	public bool resetMineData = false;
-	public bool randomSetMineData = false;
+	public int XSize = 0;
+	public int YSize = 0;
 	public List2DGameObject areaGbs = null;
 	public List2DInt mineDatas = new List2DInt(0, 0, 0);
-	int[] aroundXs = {-1, 0, 1, -1, 1, -1, 0, 1};
-	int[] aroundYs = {-1, -1, -1, 0, 0, 1, 1, 1};
 	public int mineCount = 0;
-	void Start () {
-		if(areaGbs == null)
-		areaGbs = new List2DGameObject(0, 0, gameObject);
-	}
-	void Update () {
-		if(reGenerate){
-			reGenerate = false;
-			ReGenerate();
-		}
-		if(resetMineData){
-			resetMineData = false;
-			ResetMineData();
-		}
-		if(realReGenerate){
-			realReGenerate = false;
-			int tempX = nextX;
-			int tempY = nextY;
-			nextX = 0;
-			nextY = 0;
-			ReGenerate();
-			nextX = tempX;
-			nextY = tempY;
-			ReGenerate();
-		}
-		if(randomSetMineData){
-			randomSetMineData = false;
-			RandomGenerate();
+	public Transform transform;
+	public GameObject originPrefab;
+	public event System.Action BeforeDestroyAction;
+	public event System.Action AfterDestroyAction; 
+	public MainData(int x, int y, float _step, Transform _transform, MainDataMB _mb){
+		mb = _mb;
+		areaGbs = new List2DGameObject(0, 0, null);
+		transform = _transform;
+		XSize = x;
+		YSize = y;
+		mineDatas = new List2DInt(x, y, 0);
+		areaGbs = new List2DGameObject(x, y, null);
+		step = _step;
+		originPrefab = Resources.Load<GameObject> ("Origin");
+		foreach(var pos in areaGbs.Positions()){
+			createNewGb(pos);
 		}
 	}
-	void ReGenerate(){
-		for(int i = 0; i < nowX; i++){
-			for(int j = 0; j < nowY; j++){
-				if(i >= nextX || j >= nextY){
-					if(mineDatas[i, j] == -1){
-						mineCount--;
-					}
-					DestroyImmediate(areaGbs[i, j]);
-				}
+	public int CountingMineCount(){
+		int count = 0;
+		foreach(var pos in mineDatas.Positions()){
+			if(mineDatas[pos] == -1){
+				count++;
 			}
 		}
-		var newAreaGbs = new List2DGameObject(nextX, nextY, null);
-		var originPrefab = Resources.Load<GameObject> ("Origin");
-		var newMineData = new List2DInt(nextX, nextY, 0);
-		for(int j = 0; j < nextY; j++){
-			for(int i = 0; i < nextX; i++){
-				if(i < nowX && j < nowY){
-					newAreaGbs[i, j] = areaGbs[i, j];
-					newMineData[i, j] = mineDatas[i, j];
-				}
-				else{
-					var newInstance = Instantiate (originPrefab, transform);
-					newAreaGbs[i, j] = newInstance;
-					newMineData[i, j] = 0;
-				}
-				newAreaGbs[i, j].transform.localPosition = ((Vector3.right * i - Vector3.up * j) * step);
-				newAreaGbs[i, j].GetComponentInChildren<AreaView>().x = i;
-				newAreaGbs[i, j].GetComponentInChildren<AreaView>().y = j;
+		return count;
+	}
+	public void CopyMainData(MainData other){
+		foreach(var pos in mineDatas.Positions()){
+			if(other.mineDatas.Inside(pos)){
+				mineDatas[pos] = other.mineDatas[pos];
 			}
 		}
-		
-		areaGbs = newAreaGbs;
-		mineDatas = newMineData;
-		nowX = nextX;
-		nowY = nextY;
+		mineCount = CountingMineCount();
+	}
+	void createNewGb(IndexOfList2D pos){
+		areaGbs[pos] = GameObject.Instantiate (originPrefab, transform);
+		areaGbs[pos].transform.localPosition = ((Vector3.right * pos.x - Vector3.up * pos.y) * step);
+		areaGbs[pos].GetComponentInChildren<AreaView>().x = pos.x;
+		areaGbs[pos].GetComponentInChildren<AreaView>().y = pos.y;
+			
 	}
 	public Vector3 AreaPosLocal(int x, int y){
 		return (Vector3.right * x - Vector3.up * y) * step;
@@ -94,7 +62,7 @@ public class MainData : MonoBehaviour {
 		return transform.TransformPoint((Vector3.right * x - Vector3.up * y) * step);
 	}
 	public int ListIndex(int x, int y){
-		return y * nowX + x;
+		return y * XSize + x;
 	}
 	public void SetMineData(int x, int y, int value){
 		Debug.Assert(value == -1 || value == 0);
@@ -131,8 +99,8 @@ public class MainData : MonoBehaviour {
 		SetMineData(x, y, mineDatas[x, y] == -1 ? 0 : -1);
 	}
 	public void ResetMineData(){
-		for(int i = 0; i < nowX; i++){
-			for(int j = 0; j < nowY; j++){
+		for(int i = 0; i < XSize; i++){
+			for(int j = 0; j < YSize; j++){
 				mineDatas[i, j] = 0;
 			}
 		}
@@ -141,16 +109,32 @@ public class MainData : MonoBehaviour {
 	public int GetMineData(int x, int y){
 		return mineDatas[x, y];
 	}
-	public void RandomGenerate(){
-		int tempCount = mineCount;
+	public void RandomGenerate(int randomGenerateCount){
+		int tempCount = randomGenerateCount;
 		ResetMineData();
+		List<IndexOfList2D> positions = new List<IndexOfList2D>();
+		foreach(var pos in mineDatas.Positions()){
+			positions.Add(pos);
+		}
 		while(tempCount != 0){
-			int x = (int)(Random.value * nowX);
-			int y = (int)(Random.value * nowY);
-			if(mineDatas[x, y] != -1){
-				ReverseMineData(x, y);
-				tempCount--;
+			int index = (int)(Random.value * positions.Count);
+			IndexOfList2D pos = positions[index];
+			positions.Remove(pos);
+			ReverseMineData(pos.x, pos.y);
+			tempCount--;
+		}
+	}
+	public void Destroy(){
+		if(BeforeDestroyAction != null){
+			BeforeDestroyAction();
+		}
+		foreach(var pos in areaGbs.Positions()){
+			if(areaGbs[pos] != null){
+				GameObject.DestroyImmediate(areaGbs[pos]);
 			}
+		}
+		if(AfterDestroyAction != null){
+			AfterDestroyAction();
 		}
 	}
 }

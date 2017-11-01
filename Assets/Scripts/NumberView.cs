@@ -19,9 +19,7 @@ public class NumberView : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(areaView.gamePart != null){
-			int value = areaView.gamePart.mineDatas[areaView.x, areaView.y];
-			textMesh.text = value == 0 ? "" : value.ToString();
-		}
+		int value = Singleton.MainData.mineDatas[areaView.x, areaView.y];
+		textMesh.text = value == 0 ? "" : value.ToString();
 	}
 }

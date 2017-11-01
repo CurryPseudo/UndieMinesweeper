@@ -5,7 +5,6 @@ public class AreaView : MonoBehaviour {
     public int x;
     public int y;
     float originScaleX = -1;
-    public GamePart gamePart = null;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -30,13 +29,19 @@ public class AreaView : MonoBehaviour {
         Destroy(transform.parent.gameObject);
     }
     /// <summary>
-    /// OnMouseDown is called when the user has pressed the mouse button while
-    /// over the GUIElement or Collider.
+    /// Called every frame while the mouse is over the GUIElement or Collider.
     /// </summary>
-    void OnMouseDown()
+    void OnMouseOver()
     {
-        if(gamePart != null){
-            gamePart.AreaClick(x, y);
+        if(Input.GetMouseButtonDown(0)){
+            Singleton.GamePart.AreaClick(x, y);
         }
+        if(Input.GetMouseButtonDown(1)){
+            if(Singleton.FlagPart != null){
+                Singleton.FlagPart.RclickPos(new IndexOfList2D(x, y));
+            }
+        }
+        
     }
+   
 }

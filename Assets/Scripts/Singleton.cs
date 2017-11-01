@@ -1,22 +1,37 @@
 using UnityEngine;
 using UnityEditor;
 public class Singleton{
-    static MainData mainData = null;
-    static GamePart gamePart = null;
+    static GameObject mainDataGb = null;
+    static Precalculate precalculate = null;
+    public static GameObject MainDataGb{
+        get{
+            if(mainDataGb == null){
+                mainDataGb = GameObject.Find("MainData");
+            }
+            return mainDataGb;
+        }
+    }
     public static MainData MainData{
         get{
-            if(mainData == null){
-                mainData = GameObject.Find("MainData").GetComponent<MainData>();
-            }
-            return mainData;
+            return MainDataGb.GetComponent<MainDataMB>().mainData;
         }
     }
     public static GamePart GamePart{
         get{
-            if(gamePart == null){
-                gamePart = GameObject.Find("MainData").GetComponent<GamePart>();
+            return MainDataGb.GetComponent<GamePart>();
+        }
+    }
+    public static FlagPart FlagPart{
+        get{
+            return MainDataGb.GetComponent<FlagPart>();
+        }
+    }
+    public static Precalculate Precalculate{
+        get{
+            if(precalculate == null){
+                precalculate = GameObject.Find("Algorithm2").GetComponent<Precalculate>();
             }
-            return gamePart;
+            return precalculate;
         }
     }
     public static void DrawABeaultifulButton(IndexOfList2D pos, Color color, System.Action pushButton){
@@ -45,6 +60,9 @@ public class Singleton{
 		}
     }
     public static List2DInt CreateNewList2DInt(){
-        return new List2DInt(mainData.nowX, mainData.nowY, 0);
+        return new List2DInt(MainData.XSize, MainData.YSize, 0);
+    }
+    public static void ResetFlipBoardAndRandomGenerateMineData(){
+        
     }
 }

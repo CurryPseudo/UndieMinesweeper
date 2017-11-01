@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54598e7ac147549859aab2be629cac61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 0.65333045, g: 0.83823526, b: 0.6546056, a: 1}
 --- !u!212 &212506380742987858
 SpriteRenderer:
   m_ObjectHideFlags: 1

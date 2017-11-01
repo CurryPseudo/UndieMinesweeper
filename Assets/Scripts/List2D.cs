@@ -58,6 +58,13 @@ public class List2D<T> : System.Object{
             this[index.x, index.y] = value;
         }
     }
+    public IEnumerable<IndexOfList2D> Positions(){
+        for(int i = 0; i < xSize; i++){
+            for(int j = 0; j < ySize; j++){
+                yield return new IndexOfList2D(i, j);
+            }
+        }
+    }
     public bool Inside(int x, int y){
         return x >= 0 && x < xSize && y >= 0 && y < ySize;
     }

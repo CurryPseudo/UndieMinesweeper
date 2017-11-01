@@ -57,7 +57,7 @@
      <Compile Include="Assets\Editor\Algorithm2\ShowCaEditor.cs" />
      <Compile Include="Assets\Editor\Algorithm2\ShowPositionsEditor.cs" />
      <Compile Include="Assets\Editor\EditWithList2DIntEditor.cs" />
-     <Compile Include="Assets\Editor\MainDataEditor.cs" />
+     <Compile Include="Assets\Editor\MainDataMBEditor.cs" />
      <Compile Include="Assets\Editor\ShowMineResultEditor.cs" />
      <Compile Include="Assets\Editor\WatchList2DInScene.cs" />
  <Reference Include="UnityEngine.Analytics">

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class GamePart : MonoBehaviour {
     public List2DInt flipBoard = null;
-    public List2DInt mineDatas = null;
-    public MainData mainData = null;
     public List2D<AreaView> areaViews = null;
     public float flipDelayTime = 0.3f;
     public float flipTime = 0.5f;
@@ -12,23 +10,47 @@ public class GamePart : MonoBehaviour {
     public event FlipAction flipAction;
     public delegate void ClickAction(IndexOfList2D clickPos);
     public event ClickAction clickAction;
+    public List<List<AreaView>> beforesList;
+    public List<List<AreaView>> aftersList;
+    public event System.Action initAction;
+    public bool GameValid = true;
+    public bool flipMine = false;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
-    void Awake()
-    {
-        
-        mainData = GameObject.Find("MainData").GetComponent<MainData>();
-        var areaGbs = mainData.areaGbs;
+    public int UnFlipedAreaCount{
+        get{
+            int count = 0;
+            foreach(var pos in flipBoard.Positions()){
+                if(flipBoard[pos] == 0){
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+    void Init(){
+        var areaGbs = Singleton.MainData.areaGbs;
         flipBoard = new List2DInt(areaGbs.XSize, areaGbs.YSize, 0);
         areaViews = new List2D<AreaView>(areaGbs.XSize, areaGbs.YSize, null);
         for(int i = 0; i < areaGbs.XSize; i++){
             for(int j = 0; j < areaGbs.YSize; j++){
                 areaViews[i, j] = areaGbs[i, j].GetComponentInChildren<AreaView>();
-                areaViews[i, j].gamePart = this;
             }
         }
-        mineDatas = mainData.mineDatas;
+        beforesList = new List<List<AreaView>>();
+        aftersList = new List<List<AreaView>>();
+        GameValid = true;
+        flipMine = false;
+        if(initAction != null){
+            initAction();
+        }
+    }
+    void Awake()
+    {
+        Init();
+        Singleton.MainData.BeforeDestroyAction += GetFlipsDone;
+        Singleton.MainData.mb.AfterReGenerateAction += Init;
     }
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -46,29 +68,26 @@ public class GamePart : MonoBehaviour {
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void Update()
-    {
-
-    }
-    IEnumerator Flip(List<FlipNode> flipNodes){
+   IEnumerator Flip(List<FlipNode> flipNodes){
+       if(flipNodes.Count == 0) yield break;
         GameObject[] prefabs = {Resources.Load("Number") as GameObject, Resources.Load("Mine") as GameObject};
         List<AreaView> befores = new List<AreaView>();
         List<AreaView> afters = new List<AreaView>();
+        beforesList.Add(befores);
+        aftersList.Add(afters);
         foreach(FlipNode node in flipNodes){
             befores.Add(areaViews[node.x, node.y]);
-            int index = mineDatas[node.x, node.y] != -1 ? 0 : 1;
-            var gb = Instantiate(prefabs[index], mainData.transform);
-            gb.transform.localPosition = mainData.AreaPosLocal(node.x, node.y);
+            int index = Singleton.MainData.mineDatas[node.x, node.y] != -1 ? 0 : 1;
+            var gb = Instantiate(prefabs[index], Singleton.MainData.transform);
+            gb.transform.localPosition = Singleton.MainData.AreaPosLocal(node.x, node.y);
             var av = gb.GetComponentInChildren<AreaView>();
             av.x = node.x;
             av.y = node.y;
-            av.gamePart = this;
             av.SetSize(0);
-            areaViews[node.x, node.y] = av;
             afters.Add(av);
         }
         float delayCountTime = 0;
-        while(true){
+        while(delayCountTime <= flipNodes[flipNodes.Count - 1].startFlipTime + flipTime){
             int nodeIndex = 0;
             while(nodeIndex < flipNodes.Count){
                 if(delayCountTime > flipNodes[nodeIndex].startFlipTime){
@@ -81,15 +100,39 @@ public class GamePart : MonoBehaviour {
             yield return null;
             delayCountTime += Time.deltaTime;
         }
+        GetBeforesDone(befores);
+        beforesList.Remove(befores);
+        GetAftersDone(afters);
+        aftersList.Remove(afters); 
+        yield break;
+    }
+    public void GetFlipsDone(){
+        StopAllCoroutines();
+        foreach(var befores in beforesList){
+            GetBeforesDone(befores);
+        }
+        foreach(var afters in aftersList){
+            GetAftersDone(afters);
+        }
+        beforesList.Clear();
+        aftersList.Clear();
+    }
+    public void GetBeforesDone(List<AreaView> befores){
         foreach(var av in befores){
             av.DestroyAll();
         }
+    }
+    public void GetAftersDone(List<AreaView> afters){
         foreach(var av in afters){
             av.SetSize(1);
+            areaViews[av.x, av.y] = av;
+            Singleton.MainData.areaGbs[av.x, av.y] = av.transform.parent.gameObject;
         }
-        yield break;
     }
     public void AreaClick(int x, int y){
+        if(!GameValid){
+            return;
+        }
         Debug.Assert(flipBoard.Inside(x, y));
         if(clickAction != null){
             clickAction.Invoke(new IndexOfList2D(x, y));
@@ -101,10 +144,14 @@ public class GamePart : MonoBehaviour {
            BFS.Enqueue(head);
            while(BFS.Count > 0){
                FlipNode node = BFS.Dequeue() as FlipNode;
-               if(flipBoard[node.x, node.y] == 0 && mineDatas[node.x, node.y] != -1){
+               if(flipBoard[node.x, node.y] == 0){
+                   if(Singleton.MainData.mineDatas[node.x, node.y] == -1){
+                       GameValid = false;
+                       flipMine = true;
+                   }
                    flipBoard[node.x, node.y] = 1;
                    flipNodes.Add(node);
-                   if(mineDatas[node.x, node.y] == 0){
+                   if(Singleton.MainData.mineDatas[node.x, node.y] == 0){
                         flipBoard.ChangeAround(node.x, node.y, 
                             (int aroundX, int aroundY, int get)=>{
                                 FlipNode newNode = new FlipNode(node.depth + 1, aroundX, aroundY, node.depth * flipDelayTime);

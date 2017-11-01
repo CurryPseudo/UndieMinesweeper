@@ -21,7 +21,7 @@ public bool isDead = false;
     }
 
 	public void CheckDead(){
-		List2DInt deadMap = new List2DInt(Singleton.MainData.nowX, Singleton.MainData.nowY, 0);
+		List2DInt deadMap = new List2DInt(Singleton.MainData.XSize, Singleton.MainData.YSize, 0);
         int outsideCount = ca.outsides.Count;
         foreach(var keyAndValue in searchResults){
             foreach(var positions in keyAndValue.Value){
