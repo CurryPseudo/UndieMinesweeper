@@ -61,16 +61,16 @@ public class FlagPart : MonoBehaviour {
 		
 	}
 	public void FlipAround(IndexOfList2D pos){
-		bool hasFlagAround = false;
+		int flagCount = 0;
 		flagMap.ChangeAround(pos.x, pos.y,
 			(int aroundX, int aroundY, int get)=>{
 				if(get == 1) {
-					hasFlagAround = true;
+					flagCount++;
 				}
 				return get;
 			}
 		);
-		if(hasFlagAround) {
+		if(Singleton.MainData.mineDatas[pos] == flagCount) {
 			flagMap.ChangeAround(pos.x, pos.y,
 				(int aroundX, int aroundY, int get)=>{
 					if(get != 1) {
