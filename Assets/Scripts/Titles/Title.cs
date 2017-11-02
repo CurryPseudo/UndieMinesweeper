@@ -16,7 +16,7 @@ public class Title : MonoBehaviour{
     /// </summary>
     void Update()
     {
-        if(textMesh == null){
+        if(textMesh == null) {
             textMesh = GetComponent<TextMesh>();
         }
         

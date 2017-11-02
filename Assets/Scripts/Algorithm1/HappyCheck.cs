@@ -23,8 +23,8 @@ public class HappyCheck : MonoBehaviour {
 		numberList = new SmartList<HCArea>();
 		unFlipAreaList = new SmartList<HCArea>();
 		unFlipAreaInsideList = new SmartList<IndexOfList2D>();
-		for(int i = 0; i < map.XSize; i++){
-			for(int j = 0; j < map.YSize; j++){
+		for(int i = 0; i < map.XSize; i++) {
+			for(int j = 0; j < map.YSize; j++) {
 				insideMap[i, j] = unFlipAreaInsideList.Add(new IndexOfList2D(i, j));
 			}
 		}
@@ -40,42 +40,42 @@ public class HappyCheck : MonoBehaviour {
 		debugWithMap.GetComponent<WatchList2DInScene>().list = insideMap;
 		
 	}
-	public void AddUnflipArea(HCArea ufa){
+	public void AddUnflipArea(HCArea ufa) {
 		map[ufa.pos] = unFlipAreaList.Add(ufa);
 	}
-	public void AddNumber(HCArea number){
+	public void AddNumber(HCArea number) {
 		map[number.pos] = -2 - numberList.Add(number);
 	}
-	public void resetNumbersValue(){
-		foreach(var number in numberList){
+	public void resetNumbersValue() {
+		foreach(var number in numberList) {
 			number.value = Singleton.MainData.mineDatas[number.pos];
 		}
 	}
-	public HCArea GetHCArea(int x, int y){
-		if(map[x, y] > -1){
+	public HCArea GetHCArea(int x, int y) {
+		if(map[x, y] > -1) {
 			return unFlipAreaList[map[x, y]];
-		}else if(map[x, y] < -1){
+		}else if(map[x, y] < -1) {
 			return numberList[-2 -map[x, y]];
 		}else{
 			return null;
 		}
 	}
-	public void RemoveUnflipArea(HCArea ufa){
+	public void RemoveUnflipArea(HCArea ufa) {
 		unFlipAreaList.RemoveAt(map[ufa.pos]);
 		map[ufa.pos] = -1;
 	}
-	public void RemoveNumber(HCArea number){
+	public void RemoveNumber(HCArea number) {
 		numberList.RemoveAt(-2 - map[number.pos]);
 		map[number.pos] = -1;
 	}
-	public void ChangeMapByFlip(List<FlipNode> flipNodes){
+	public void ChangeMapByFlip(List<FlipNode> flipNodes) {
 		flipBoard = Singleton.GamePart.flipBoard;
-		foreach(var node in flipNodes){
-			if(map[node.x, node.y] != -1){
+		foreach(var node in flipNodes) {
+			if(map[node.x, node.y] != -1) {
 				var ufa = GetHCArea(node.x, node.y);
-				foreach(var aroundNumber in ufa.neighbours){
+				foreach(var aroundNumber in ufa.neighbours) {
 					aroundNumber.neighbours.Remove(ufa);
-					if(aroundNumber.neighbours.Count == 0){
+					if(aroundNumber.neighbours.Count == 0) {
 						RemoveNumber(aroundNumber);
 					}
 				}
@@ -88,9 +88,9 @@ public class HappyCheck : MonoBehaviour {
 			HCArea number = new HCArea(mineDatas[node.x, node.y], new IndexOfList2D(node.x, node.y), aroundUfa);
 			flipBoard.ChangeAround(node.x, node.y,
 				(int x, int y, int get)=>{
-					if(get == 0){
+					if(get == 0) {
 						HCArea ufa = GetHCArea(x, y);
-						if(ufa == null){
+						if(ufa == null) {
 							ufa = new HCArea(-1, new IndexOfList2D(x, y), new List<HCArea>());
 							unFlipAreaInsideList.RemoveAt(insideMap[ufa.pos]);
 							insideMap[ufa.pos] = -1;
@@ -102,50 +102,50 @@ public class HappyCheck : MonoBehaviour {
 					return get;
 				}
 			);
-			if(aroundUfa.Count > 0){
+			if(aroundUfa.Count > 0) {
 				AddNumber(number);
 			}
 		}
 
 	}
-	/*public void Check(){
+	/*public void Check() {
 		if(unFlipAreaList.Count == 0) return;
 		List2DInt ufaMap = new List2DInt(mineDatas.XSize, mineDatas.YSize, -1);
 		int[] ufaIndexes = new int[unFlipAreaList.Count];
 		int numberCount = numberList.Count;
 		int index = 0;
-		foreach(var ufa in unFlipAreaList){
+		foreach(var ufa in unFlipAreaList) {
 			ufaIndexes[index] = map[ufa.pos];
 			ufaMap[ufa.pos] = 0;
 		}
 		List<int> stack = new List<int>();
 		int sortIndex = 0;
-		while(sortIndex < unFlipAreaList.Count || stack.Count > 0){
-			if(numberCount == 0){
+		while(sortIndex < unFlipAreaList.Count || stack.Count > 0) {
+			if(numberCount == 0) {
 				print(stack);
 			}
-			if(sortIndex == unFlipAreaList.Count){
+			if(sortIndex == unFlipAreaList.Count) {
 				sortIndex = stack[stack.Count - 1];
 				stack.RemoveAt(stack.Count - 1);
 				HCArea ufa = unFlipAreaList[ufaIndexes[sortIndex]];
-				foreach(HCArea number in ufa.neighbours){
+				foreach(HCArea number in ufa.neighbours) {
 					number.value++;
-					if(number.value == 1){
+					if(number.value == 1) {
 						numberCount++;
-						foreach(var neighbourUfa in number.neighbours){
+						foreach(var neighbourUfa in number.neighbours) {
 							ufaMap[neighbourUfa.pos] = 0;
 						}
 					}
 				}
 			}else
-			if(ufaMap[unFlipAreaList[ufaIndexes[sortIndex]].pos] == 0){
+			if(ufaMap[unFlipAreaList[ufaIndexes[sortIndex]].pos] == 0) {
 				stack.Add(sortIndex);
 				HCArea ufa = unFlipAreaList[ufaIndexes[sortIndex]];
-				foreach(HCArea number in ufa.neighbours){
+				foreach(HCArea number in ufa.neighbours) {
 					number.value--;
-					if(number.value == 0){
+					if(number.value == 0) {
 						numberCount--;
-						foreach(var neighbourUfa in number.neighbours){
+						foreach(var neighbourUfa in number.neighbours) {
 							ufaMap[neighbourUfa.pos] = 1;
 						}
 					}
@@ -164,7 +164,7 @@ public class HCArea{
 	public int value;
 	public IndexOfList2D pos;
 	public List<HCArea> neighbours;
-	public HCArea(int _value, IndexOfList2D _pos, List<HCArea> _neighbours){
+	public HCArea(int _value, IndexOfList2D _pos, List<HCArea> _neighbours) {
 		pos = _pos;
 		neighbours = _neighbours;
 		value = _value;

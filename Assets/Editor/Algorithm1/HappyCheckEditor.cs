@@ -15,31 +15,31 @@ public class HappyCheckEditor : Editor {
     {
         HappyCheck happyCheck = target as HappyCheck;
         Handles.color = Color.white;
-        if(mainData == null){
+        if(mainData == null) {
             mainData = GameObject.Find("MainData").GetComponent<MainData>();
         }
         if(happyCheck.map == null) return;
-        if(now == null){
+        if(now == null) {
             SmartList<HCArea>[] hack = {happyCheck.unFlipAreaList, happyCheck.numberList};
-            for(int i = 0; i < 2; i++){
-                foreach(HCArea ufa in hack[i]){
+            for(int i = 0; i < 2; i++) {
+                foreach(HCArea ufa in hack[i]) {
                     Handles.color = ufa.value >= 0 ? Color.yellow : Color.red;
-                    if(Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
+                    if(Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)) {
                         now = ufa;
                     }   
                     Handles.Label(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), ufa.value.ToString());
                 }   
             }
         }else{
-            foreach(HCArea neighbor in now.neighbours){
+            foreach(HCArea neighbor in now.neighbours) {
                 Handles.color = neighbor.value >= 0 ? Color.yellow : Color.red;
                 Handles.Label(mainData.AreaPosWorld(neighbor.pos.x, neighbor.pos.y), neighbor.value.ToString());
-                if(Handles.Button(mainData.AreaPosWorld(neighbor.pos.x, neighbor.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
+                if(Handles.Button(mainData.AreaPosWorld(neighbor.pos.x, neighbor.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)) {
                     now = neighbor;
                 }   
             }
             Handles.color = now.value >= 0 ? Color.yellow : Color.red;
-            if(Handles.Button(mainData.AreaPosWorld(now.pos.x, now.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
+            if(Handles.Button(mainData.AreaPosWorld(now.pos.x, now.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)) {
                 now = null;
             }   
         }

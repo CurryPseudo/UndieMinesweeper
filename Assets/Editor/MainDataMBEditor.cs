@@ -14,17 +14,17 @@ public class MainDataMBEditor : Editor {
     {
         MainData mainData = (target as MainDataMB).mainData;
         Handles.color = Color.white;
-        for(int i = 0; i < mainData.XSize; i++){
-            for(int j = 0; j < mainData.YSize; j++){
+        for(int i = 0; i < mainData.XSize; i++) {
+            for(int j = 0; j < mainData.YSize; j++) {
                 int mineData = mainData.GetMineData(i, j); 
                 Handles.color = mineData == -1 ? Color.red : Color.white;
-                if(Handles.Button(mainData.AreaPosWorld(i, j), Quaternion.identity, 0.5f, 0.5f, Handles.RectangleHandleCap)){
+                if(Handles.Button(mainData.AreaPosWorld(i, j), Quaternion.identity, 0.5f, 0.5f, Handles.RectangleHandleCap)) {
                     mainData.ReverseMineData(i, j);
                 }
             }
         }
-        foreach(var pos in mainData.mineDatas.Positions()){
-            Singleton.DrawABeaultifulLabel(pos, mainData.mineDatas[pos].ToString());
+        foreach(var pos in mainData.mineDatas.Positions()) {
+            SingletonForEditor.DrawABeaultifulLabel(pos, mainData.mineDatas[pos].ToString());
         }
 
     }

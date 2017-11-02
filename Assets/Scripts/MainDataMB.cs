@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 [ExecuteInEditMode]
@@ -19,29 +18,33 @@ public class MainDataMB : MonoBehaviour{
     /// </summary>
     void Start()
     {
+        RandomReGenerate();
     }
-    public void ReGenerate(){
-        if(mainData != null){
+    public void RandomReGenerate(){
+        mainData.RandomGenerate(randomGenerateCount);
+    }
+    public void ReGenerate() {
+        if(mainData != null) {
             mainData.Destroy();
         }
         MainData last = mainData;
         mainData = new MainData(nextX, nextY, step, transform, this);
         mainData.CopyMainData(last);
-        if(AfterReGenerateAction != null){
+        if(AfterReGenerateAction != null) {
             AfterReGenerateAction();
         }
     }
 	void Update () {
-		if(reGenerate){
+		if(reGenerate) {
 			reGenerate = false;
             ReGenerate();
 		}
-		if(resetMineData){
+		if(resetMineData) {
 			resetMineData = false;
 			mainData.ResetMineData();
 		}
 		
-		if(randomSetMineData){
+		if(randomSetMineData) {
 			randomSetMineData = false;
 			mainData.RandomGenerate(randomGenerateCount);
 		}

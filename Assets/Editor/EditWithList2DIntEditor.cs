@@ -14,12 +14,12 @@ public abstract class EditWithList2DIntEditor : Editor {
     {
         Handles.color = Color.white;
         List2D<int> list2D = GetMainList2D();
-        if(mainData == null){
+        if(mainData == null) {
                 mainData = GameObject.Find("MainData").GetComponent<MainData>();
         }
-        if(list2D != null && list2D.XSize >= mainData.mineDatas.XSize && list2D.YSize >= mainData.mineDatas.YSize){
-            for(int i = 0; i < mainData.XSize; i++){
-                for(int j = 0; j < mainData.YSize; j++){
+        if(list2D != null && list2D.XSize >= mainData.mineDatas.XSize && list2D.YSize >= mainData.mineDatas.YSize) {
+            for(int i = 0; i < mainData.XSize; i++) {
+                for(int j = 0; j < mainData.YSize; j++) {
                     Handles.Label(mainData.AreaPosWorld(i, j), list2D[i, j].ToString());
                 }
             }

@@ -10,35 +10,35 @@ public class SearchForCaEditor : Editor {
 	public int areaType = 0;
 	public Area now = null;
 	// Use this for initialization
-	public void OnSceneGUI(){
-		if(searchForCa == null){
+	public void OnSceneGUI() {
+		if(searchForCa == null) {
 			searchForCa = (target as SearchForCaMB).searchForCa;
 		}
-		if(mainData == null){
+		if(mainData == null) {
 			mainData = Singleton.MainData;
 		}
-		if(searchForCa.ca != null){
-			foreach(var minePos in searchForCa.GetMineList()){
-				Singleton.DrawABeaultifulButton(minePos,searchForCa.stepResult == SearchingStepResult.GETRESULT ? Color.green : Color.red, null);
+		if(searchForCa.ca != null) {
+			foreach(var minePos in searchForCa.GetMineList()) {
+				SingletonForEditor.DrawABeaultifulButton(minePos,searchForCa.stepResult == SearchingStepResult.GETRESULT ? Color.green : Color.red, null);
 			}
-			foreach(var number in searchForCa.GetNumberList()){
+			foreach(var number in searchForCa.GetNumberList()) {
 				var point = searchForCa.GetNumberPoint(number);
-				Singleton.DrawABeaultifulButton(number.pos, point == 0 ? Color.grey : Color.yellow, null);
-				Singleton.DrawABeaultifulLabel(number.pos, point.ToString());
-				if(point == 0){
-					foreach(var neighbour in number.neighbours){
-						Singleton.DrawABeautifulSmallButton(neighbour.pos, Color.grey, null);
+				SingletonForEditor.DrawABeaultifulButton(number.pos, point == 0 ? Color.grey : Color.yellow, null);
+				SingletonForEditor.DrawABeaultifulLabel(number.pos, point.ToString());
+				if(point == 0) {
+					foreach(var neighbour in number.neighbours) {
+						SingletonForEditor.DrawABeautifulSmallButton(neighbour.pos, Color.grey, null);
 					}
 				}
 			}
 			var iteratingNumber = searchForCa.GetIteratingNumber();
-			if(iteratingNumber != null){
+			if(iteratingNumber != null) {
 				var point = searchForCa.GetNumberPoint(iteratingNumber);
-				Singleton.DrawABeaultifulButton(iteratingNumber.pos, Color.blue, null);
-				Singleton.DrawABeaultifulLabel(iteratingNumber.pos, point.ToString());
+				SingletonForEditor.DrawABeaultifulButton(iteratingNumber.pos, Color.blue, null);
+				SingletonForEditor.DrawABeaultifulLabel(iteratingNumber.pos, point.ToString());
 				var iteratingOutside = searchForCa.GetIteratingOutside(); 
-				if(iteratingOutside != null){
-					Singleton.DrawABeaultifulButton(iteratingOutside.pos, Color.blue, null);
+				if(iteratingOutside != null) {
+					SingletonForEditor.DrawABeaultifulButton(iteratingOutside.pos, Color.blue, null);
 				}
 			}
 		}

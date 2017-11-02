@@ -18,14 +18,14 @@ public class AreaView : MonoBehaviour {
     void Update()
     {
     }
-    public void SetSize(float size){
+    public void SetSize(float size) {
         Debug.Assert(size <= 1 && size >= 0);
-        if(originScaleX == -1){
+        if(originScaleX == -1) {
             originScaleX = transform.parent.localScale.x;
         }
         transform.parent.localScale = new Vector3(originScaleX * size, transform.localScale.y, transform.localScale.z);
     }
-    public void DestroyAll(){
+    public void DestroyAll() {
         Destroy(transform.parent.gameObject);
     }
     /// <summary>
@@ -33,15 +33,19 @@ public class AreaView : MonoBehaviour {
     /// </summary>
     void OnMouseOver()
     {
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButtonDown(0)) {
             Singleton.GamePart.AreaClick(x, y);
         }
-        if(Input.GetMouseButtonDown(1)){
-            if(Singleton.FlagPart != null){
+        if(Input.GetMouseButtonDown(1)) {
+            if(Singleton.FlagPart != null) {
                 Singleton.FlagPart.RclickPos(new IndexOfList2D(x, y));
             }
         }
-        
+        if(Input.GetMouseButtonDown(2)) {
+            if(Singleton.FlagPart != null){
+                Singleton.FlagPart.MidclickPos(new IndexOfList2D(x, y));
+            }
+        }
     }
    
 }

@@ -20,7 +20,7 @@ public class TitleButtonDown : MonoBehaviour {
 	void OnMouseDown()
 	{
 		Singleton.MainDataGb.GetComponent<MainDataMB>().ReGenerate();
-		Singleton.MainData.RandomGenerate(52);
+		Singleton.MainDataGb.GetComponent<MainDataMB>().RandomReGenerate();
 		Singleton.FlagPart.ReStart();
 	}
 }

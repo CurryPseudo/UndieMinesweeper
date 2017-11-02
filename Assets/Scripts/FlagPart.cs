@@ -8,15 +8,15 @@ public class FlagPart : MonoBehaviour {
 	public int FlagCount{
 		get{
 			int count = 0;
-			foreach(var pos in flagMap.Positions()){
-				if(flagMap[pos] == 1){
+			foreach(var pos in flagMap.Positions()) {
+				if(flagMap[pos] == 1) {
 					count++;
 				}
 			}
 			return count;
 		}
 	}
-	public void ReStart(){
+	public void ReStart() {
 		Destroy();
 		flagMap = Singleton.CreateNewList2DInt();
 		flagGbs = new List2DGameObject(Singleton.MainData.XSize, Singleton.MainData.YSize, null);
@@ -26,33 +26,33 @@ public class FlagPart : MonoBehaviour {
 		flagMap = Singleton.CreateNewList2DInt();
 		flagGbs = new List2DGameObject(Singleton.MainData.XSize, Singleton.MainData.YSize, null);
 	}
-	public void Destroy(){
-		foreach(var pos in flagGbs.Positions()){
-			if(flagGbs[pos] != null){
+	public void Destroy() {
+		foreach(var pos in flagGbs.Positions()) {
+			if(flagGbs[pos] != null) {
 				DestroyImmediate(flagGbs[pos]);
 			}
 		}
 	}
-	public void RefreshView(){
-		for(int i = 0; i < flagMap.XSize; i++){
-			for(int j = 0; j < flagGbs.YSize; j++){
+	public void RefreshView() {
+		for(int i = 0; i < flagMap.XSize; i++) {
+			for(int j = 0; j < flagGbs.YSize; j++) {
 				var pos = new IndexOfList2D(i, j);
-				if(flagMap[pos] == 0 && flagGbs[pos] != null){
+				if(flagMap[pos] == 0 && flagGbs[pos] != null) {
 					Destroy(flagGbs[pos]);
 					flagGbs[pos] = null;
 				}else
-				if(flagMap[pos] == 1 && flagGbs[pos] == null){
+				if(flagMap[pos] == 1 && flagGbs[pos] == null) {
 					CreateFlagGb(pos);
 				}
-				if(flagGbs[pos] != null){
+				if(flagGbs[pos] != null) {
 					flagGbs[pos].transform.position = Singleton.MainData.AreaPosWorld(pos);
 				}
 			}
 		}
 	}
-	public void CreateFlagGb(IndexOfList2D pos){
+	public void CreateFlagGb(IndexOfList2D pos) {
 		GameObject flagFather = GameObject.Find("Flags");
-		if(flagFather == null){
+		if(flagFather == null) {
 			flagFather = new GameObject("Flags");
 		}
 		var flagPrefab = Resources.Load<GameObject>("flag");					
@@ -60,29 +60,35 @@ public class FlagPart : MonoBehaviour {
 		flagGbs[pos].transform.parent = flagFather.transform;
 		
 	}
-	public void RclickPos(IndexOfList2D pos){
-		if(Singleton.GamePart.flipBoard[pos] == 1){
-			return;
-			bool hasFlagAround = false;
+	public void FlipAround(IndexOfList2D pos){
+		bool hasFlagAround = false;
+		flagMap.ChangeAround(pos.x, pos.y,
+			(int aroundX, int aroundY, int get)=>{
+				if(get == 1) {
+					hasFlagAround = true;
+				}
+				return get;
+			}
+		);
+		if(hasFlagAround) {
 			flagMap.ChangeAround(pos.x, pos.y,
 				(int aroundX, int aroundY, int get)=>{
-					if(get == 1){
-						hasFlagAround = true;
+					if(get != 1) {
+						Singleton.GamePart.AreaClick(aroundX, aroundY);
 					}
 					return get;
 				}
 			);
-			if(hasFlagAround){
-				flagMap.ChangeAround(pos.x, pos.y,
-					(int aroundX, int aroundY, int get)=>{
-						if(get != 1){
-							Singleton.GamePart.AreaClick(aroundX, aroundY);
-						}
-						return get;
-					}
-				);
-			}
-		}else{
+		}
+
+	}
+	public void MidclickPos(IndexOfList2D pos){
+		if(Singleton.GamePart.flipBoard[pos] == 1){
+			FlipAround(pos);
+		}
+	}
+	public void RclickPos(IndexOfList2D pos) {
+		if(Singleton.GamePart.flipBoard[pos] != 1) {
 			flagMap[pos] = 1 - flagMap[pos];
 			RefreshView();
 		}

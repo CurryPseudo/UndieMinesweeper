@@ -16,22 +16,22 @@ public class HappyCheckStepEditor : Editor {
     {
         happyCheckStep = target as HappyCheckStep;
         Handles.color = Color.white;
-        if(mainData == null){
+        if(mainData == null) {
             mainData = GameObject.Find("MainData").GetComponent<MainData>();
         }
         if(happyCheckStep.ufaMap == null) return;
-        if(happyCheckStep.sortIndex < happyCheckStep.ufaIndexes.Length){
+        if(happyCheckStep.sortIndex < happyCheckStep.ufaIndexes.Length) {
             HCArea ufa = happyCheckStep.GetUfa(happyCheckStep.sortIndex);
             Handles.color = Color.yellow;
             Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap);
         }
-        foreach(var index in happyCheckStep.stack){
+        foreach(var index in happyCheckStep.stack) {
             HCArea ufa = happyCheckStep.GetUfa(index);
             Handles.color = happyCheckStep.numberCount == 0 ? Color.green : Color.red;
             Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap);
         }
-        for(int i = 0; i < happyCheckStep.ufaIndexes.Length; i++){
-            if(happyCheckStep.ufaMap[happyCheckStep.GetUfa(i).pos] == 1){
+        for(int i = 0; i < happyCheckStep.ufaIndexes.Length; i++) {
+            if(happyCheckStep.ufaMap[happyCheckStep.GetUfa(i).pos] == 1) {
                 HCArea ufa = happyCheckStep.GetUfa(i);
                 Handles.color = Color.grey;
                 Handles.Button(mainData.AreaPosWorld(ufa.pos.x, ufa.pos.y), Quaternion.identity, 0.5f, 0.5f, Handles.ArrowHandleCap);

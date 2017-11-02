@@ -17,24 +17,26 @@ public class TittleButtonChangeView : MonoBehaviour {
 		precalculate.afterPrecacAction += RefreshView;
 	}
 	
-	public void RefreshView(){
-		if(Singleton.GamePart.GameValid == false){
-			if(Singleton.GamePart.flipMine){
-				spriteRenderer.sprite = Embarrassed;
-			}else{
-				if(Singleton.GamePart.UnFlipedAreaCount == Singleton.MainData.mineCount){
-					spriteRenderer.sprite = Happy;
-				}
+	public void RefreshView() {
+		if(Singleton.GamePart.GameValid == false) {
+			spriteRenderer.sprite = Embarrassed;
+		}else{
+			if(Singleton.GamePart.UnFlipedAreaCount == Singleton.MainData.mineCount) {
+				spriteRenderer.sprite = Happy;
+				return;
 			}
-	}else{
+			if(precalculate.problemsAndResults.Values.Count == 0){
+				spriteRenderer.sprite = Smile;
+				return;
+			}
 			bool isDead = true;
-			foreach(var search in precalculate.problemsAndResults.Values){
-				if(!search.isDead){
+			foreach(var search in precalculate.problemsAndResults.Values) {
+				if(!search.isDead) {
 					isDead = false;
 					break;
 				}
 			}
-			if(isDead){
+			if(isDead) {
 				spriteRenderer.sprite = Insidious; 
 			}else{
 				spriteRenderer.sprite = Smile;

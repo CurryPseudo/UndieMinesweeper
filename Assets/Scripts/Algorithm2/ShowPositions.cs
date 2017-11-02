@@ -7,7 +7,7 @@ public class ShowPositions : MonoBehaviour {
 	public class PositionProperty{
 		public List<IndexOfList2D> positions;
 		public Color color;
-		public PositionProperty(List<IndexOfList2D> _positions, Color _color){
+		public PositionProperty(List<IndexOfList2D> _positions, Color _color) {
 			positions = _positions;
 			color = _color;
 		}

@@ -59,6 +59,7 @@
      <Compile Include="Assets\Editor\EditWithList2DIntEditor.cs" />
      <Compile Include="Assets\Editor\MainDataMBEditor.cs" />
      <Compile Include="Assets\Editor\ShowMineResultEditor.cs" />
+     <Compile Include="Assets\Editor\SingletonForEditor.cs" />
      <Compile Include="Assets\Editor\WatchList2DInScene.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>

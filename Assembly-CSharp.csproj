@@ -63,6 +63,8 @@
      <Compile Include="Assets\Scripts\Algorithm2\ShowPositions.cs" />
      <Compile Include="Assets\Scripts\AreaHover.cs" />
      <Compile Include="Assets\Scripts\AreaView.cs" />
+     <Compile Include="Assets\Scripts\Camera\MainCameraSize.cs" />
+     <Compile Include="Assets\Scripts\Camera\ViewRect.cs" />
      <Compile Include="Assets\Scripts\FlagPart.cs" />
      <Compile Include="Assets\Scripts\GamePart.cs" />
      <Compile Include="Assets\Scripts\List2D.cs" />

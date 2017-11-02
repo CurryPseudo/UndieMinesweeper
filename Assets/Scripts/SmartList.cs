@@ -4,11 +4,11 @@ using UnityEngine;
 public class SmartList<T> : IEnumerable{
     public List<T> items;
     public HashSet<int> emptyIndex;
-    public SmartList(){
+    public SmartList() {
         items = new List<T>();
         emptyIndex = new HashSet<int>();
     }
-    public SmartList(SmartList<T> otherList){
+    public SmartList(SmartList<T> otherList) {
         items = new List<T>(otherList.items);
         emptyIndex = new HashSet<int>(otherList.emptyIndex);
     }
@@ -26,12 +26,12 @@ public class SmartList<T> : IEnumerable{
             items[index] = value;
         }
     }
-    public void RemoveAt(int index){
+    public void RemoveAt(int index) {
         items[index] = default(T);
         emptyIndex.Add(index);
     }
-    public int Add(T t){
-        if(emptyIndex.Count == 0){
+    public int Add(T t) {
+        if(emptyIndex.Count == 0) {
             items.Add(t);
             return items.Count - 1;
         }else{
@@ -45,7 +45,7 @@ public class SmartList<T> : IEnumerable{
     }
 
 
-    public SmartListEnum<T> GetEnumerator(){
+    public SmartListEnum<T> GetEnumerator() {
         return new SmartListEnum<T>(items, emptyIndex);
     }
     IEnumerator IEnumerable.GetEnumerator()
@@ -82,9 +82,9 @@ public class SmartListEnum<T> : IEnumerator
     {
         return MoveNext();
     }
-    public bool MoveNext(){
+    public bool MoveNext() {
         index++;
-        while((index < items.Count && emptyIndex.Contains(index))){
+        while((index < items.Count && emptyIndex.Contains(index))) {
             index++;
         }
         return index != items.Count;

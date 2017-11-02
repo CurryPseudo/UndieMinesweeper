@@ -19,28 +19,28 @@ public class SearchForCaMB : MonoBehaviour {
 	/// </summary>
 	void Update()
 	{
-		if(searchForCa != null){
-			if(step){
+		if(searchForCa != null) {
+			if(step) {
 				step = false;
 				searchForCa.Step();
 			}
-			if(process){
+			if(process) {
 				process = false;
 				searchForCa.Process();
 			}
-			if(backToStart){
+			if(backToStart) {
 				backToStart = false;
 				searchForCa = new SearchForCa(searchForCa.ca);
 			}
-			if(processWithDelayTime){
+			if(processWithDelayTime) {
 				processWithDelayTime = false;
 				StartCoroutine(ProcessWithDelayTime());
 			}
-			if(stopProcess){
+			if(stopProcess) {
 				stopProcess = false;
 				StopAllCoroutines();
 			}
-			if(visualizedData){
+			if(visualizedData) {
 				visualizedData = false;
 				VisualizedData();
 			}
@@ -51,17 +51,17 @@ public class SearchForCaMB : MonoBehaviour {
 	/// This function is called when the MonoBehaviour will be destroyed.
 	/// </summary>
 
-	public void VisualizedData(){
+	public void VisualizedData() {
 		Singleton.DestroyAllChilds(transform);
 		Dictionary<int, GameObject> gbs = new Dictionary<int, GameObject>();
-		foreach(var key in searchForCa.searchResults.Keys){
+		foreach(var key in searchForCa.searchResults.Keys) {
 			GameObject gb = new GameObject(key.ToString());
 			gb.transform.parent = transform;
 			gbs[key] = gb;
 		}
-		foreach(var keyAndValue in searchForCa.searchResults){
+		foreach(var keyAndValue in searchForCa.searchResults) {
 			int resultIndex = 0;
-			foreach(var result in keyAndValue.Value){
+			foreach(var result in keyAndValue.Value) {
 				GameObject valueGb = new GameObject("Result " + resultIndex.ToString());
 				valueGb.transform.parent = gbs[keyAndValue.Key].transform;
 				ShowPositions sp = valueGb.AddComponent<ShowPositions>();
@@ -72,11 +72,11 @@ public class SearchForCaMB : MonoBehaviour {
 		}
 	}
 
-	public void ProcessWithDelayTimeAction(){
+	public void ProcessWithDelayTimeAction() {
 		StartCoroutine(ProcessWithDelayTime());
 	}
-	IEnumerator ProcessWithDelayTime(){
-		while(searchForCa.stepResult != SearchingStepResult.END){
+	IEnumerator ProcessWithDelayTime() {
+		while(searchForCa.stepResult != SearchingStepResult.END) {
 			searchForCa.Step();
 			yield return new WaitForSeconds(processDelayTime);
 		}

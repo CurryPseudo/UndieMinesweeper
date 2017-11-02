@@ -10,7 +10,7 @@ public class Precalculate : MonoBehaviour {
 	public GamePart gamePart;
 	public event System.Action afterPrecacAction;
 	public Dictionary<ConnectedAreas, SearchForCa> problemsAndResults;
-	public void Init(){
+	public void Init() {
 		mainData = Singleton.MainData;
 		gamePart = Singleton.GamePart;
 		tableBase = new PrecacTableBase(mainData.XSize, mainData.YSize);
@@ -24,10 +24,10 @@ public class Precalculate : MonoBehaviour {
 		gamePart.initAction += Init;
 	}
 	
-	public void visualizedData(){
+	public void visualizedData() {
 		Singleton.DestroyAllChilds(transform);
 		int caIndex = 0;
-		foreach(var ca in tableBase.cas.list){
+		foreach(var ca in tableBase.cas.list) {
 			GameObject caGb = new GameObject("ConnectedArea " + caIndex.ToString());
 			caGb.transform.parent = transform;
 			ShowCa sca = caGb.AddComponent<ShowCa>();
@@ -39,10 +39,10 @@ public class Precalculate : MonoBehaviour {
 			caIndex++;
 		}
 	}
-	public void Flip(List<FlipNode> flipNodes){
-		foreach(var node in flipNodes){
+	public void Flip(List<FlipNode> flipNodes) {
+		foreach(var node in flipNodes) {
 			var area = tableBase.map.GetArea(node.pos);
-			if(area != null){
+			if(area != null) {
 				area.father.RemoveOutsides(area);
 			}
 			ConnectedAreas ca = tableBase.cas.CreateCa();
@@ -51,8 +51,8 @@ public class Precalculate : MonoBehaviour {
 				(int aroundX, int aroundY, int get)=>{
 					IndexOfList2D pos = new IndexOfList2D(aroundX, aroundY);
 					Area neighbour = tableBase.map.GetArea(pos);
-					if(get == 0){
-						if(neighbour == null){
+					if(get == 0) {
+						if(neighbour == null) {
 							neighbour = tableBase.map.CreateOutside(pos, ca);
 						}else{
 							tableBase.cas.MergeCas(neighbour.father, ca);
@@ -64,18 +64,18 @@ public class Precalculate : MonoBehaviour {
 					return get;
 				}
 			);
-			if(area.neighbours.Count == 0){
+			if(area.neighbours.Count == 0) {
 				tableBase.map.RemovePos(area.pos);
 				tableBase.cas.Remove(ca);
 			}	
 		}
 		problemsAndResults = new Dictionary<ConnectedAreas, SearchForCa>();
-		foreach(var ca in tableBase.cas.list){
+		foreach(var ca in tableBase.cas.list) {
 			problemsAndResults[ca] = new SearchForCa(ca);
 			problemsAndResults[ca].Process();
 		}
 		visualizedData();
-		if(afterPrecacAction != null){
+		if(afterPrecacAction != null) {
 			afterPrecacAction();
 		}
 	}
@@ -88,13 +88,13 @@ public class Area{
 	public IndexOfList2D pos;
 	public List<Area> neighbours;
 	public ConnectedAreas father;
-	public Area(IndexOfList2D _pos, ConnectedAreas _father){
+	public Area(IndexOfList2D _pos, ConnectedAreas _father) {
 		Debug.Assert(_father != null);
 		pos = _pos;
 		neighbours = new List<Area>(8);
 		father = _father;
 	}
-	public Area(Area other){
+	public Area(Area other) {
 		pos = new IndexOfList2D(other.pos);
 		neighbours = new List<Area>(other.neighbours);
 	}
@@ -103,30 +103,30 @@ public class ConnectedAreas{
 	public HashSet<Area> numbers;
 	public HashSet<Area> outsides;
 	public Cas father;
-	public ConnectedAreas(Cas _father){
+	public ConnectedAreas(Cas _father) {
 		numbers = new HashSet<Area>();
 		outsides = new HashSet<Area>();
 		father = _father;
 	}
-	public ConnectedAreas(ConnectedAreas other){
+	public ConnectedAreas(ConnectedAreas other) {
 		numbers = new HashSet<Area>(other.numbers);
 	}
-	public void Merge(ConnectedAreas other){
+	public void Merge(ConnectedAreas other) {
 	
-		foreach(var number in other.numbers){
+		foreach(var number in other.numbers) {
 			numbers.Add(number);
 			number.father = this;
 		}
-		foreach(var outside in other.outsides){
+		foreach(var outside in other.outsides) {
 			outsides.Add(outside);
 			outside.father = this;
 		}
 	}
-	public void RemoveOutsides(Area area){
-		foreach(var number in area.neighbours){
+	public void RemoveOutsides(Area area) {
+		foreach(var number in area.neighbours) {
 			
 			number.neighbours.Remove(area);
-			if(number.neighbours.Count == 0){
+			if(number.neighbours.Count == 0) {
 				numbers.Remove(number);
 				father.father.map.RemovePos(number.pos);
 			}
@@ -141,30 +141,30 @@ public class Cas{
 	public delegate void CaAction(ConnectedAreas ca);
 	public event CaAction addCaAction;
 	public event CaAction removeCaAction;
-	public Cas(PrecacTableBase _father){
+	public Cas(PrecacTableBase _father) {
 		father = _father;
 		list = new List<ConnectedAreas>();
 	}
-	public ConnectedAreas CreateCa(){
+	public ConnectedAreas CreateCa() {
 		ConnectedAreas ca = new ConnectedAreas(this);
 		list.Add(ca);
-		if(addCaAction != null){
+		if(addCaAction != null) {
 			addCaAction(ca);
 		}
 		return ca;
 	}
-	public ConnectedAreas MergeCas(ConnectedAreas main, params ConnectedAreas[] args){
-		foreach(ConnectedAreas ca in args){
-			if(main != ca){
+	public ConnectedAreas MergeCas(ConnectedAreas main, params ConnectedAreas[] args) {
+		foreach(ConnectedAreas ca in args) {
+			if(main != ca) {
 				main.Merge(ca);
 				Remove(ca);
 			}
 		}
 		return main;
 	}
-	public void Remove(ConnectedAreas ca){
+	public void Remove(ConnectedAreas ca) {
 		list.Remove(ca);
-		if(removeCaAction != null){
+		if(removeCaAction != null) {
 			removeCaAction(ca);
 		}
 	}
@@ -173,29 +173,29 @@ public class Cas{
 public class AreaMap{
 	public PrecacTableBase father;
 	public List2D<Area> map;
-	public AreaMap(int xSize, int ySize, PrecacTableBase _father){
+	public AreaMap(int xSize, int ySize, PrecacTableBase _father) {
 		map = new List2D<Area>(xSize, ySize, null);
 		father = _father;
 	}
-	public Area GetArea(IndexOfList2D pos){
+	public Area GetArea(IndexOfList2D pos) {
 		return map[pos];
 	}
-	public Area GetArea(int x, int y){
+	public Area GetArea(int x, int y) {
 		return map[x, y];
 	}
-	public Area CreateNumber(IndexOfList2D pos, ConnectedAreas father){
+	public Area CreateNumber(IndexOfList2D pos, ConnectedAreas father) {
 		Area area = new Area(pos, father);
 		map[pos] = area;
 		father.numbers.Add(area);
 		return area;
 	}
-	public Area CreateOutside(IndexOfList2D pos, ConnectedAreas father){
+	public Area CreateOutside(IndexOfList2D pos, ConnectedAreas father) {
 		Area area = new Area(pos, father);
 		map[pos] = area;
 		father.outsides.Add(area);
 		return area;
 	}
-	public void RemovePos(IndexOfList2D pos){
+	public void RemovePos(IndexOfList2D pos) {
 		
 		map[pos] = null;
 	}
@@ -203,7 +203,7 @@ public class AreaMap{
 public class PrecacTableBase{
 	public AreaMap map;
 	public Cas cas;
-	public PrecacTableBase(int xSize, int ySize){
+	public PrecacTableBase(int xSize, int ySize) {
 		map = new AreaMap(xSize, ySize, this);
 		cas = new Cas(this);
 	}

@@ -1,14 +1,18 @@
 using UnityEngine;
-using UnityEditor;
 public class Singleton{
     static GameObject mainDataGb = null;
     static Precalculate precalculate = null;
     public static GameObject MainDataGb{
         get{
-            if(mainDataGb == null){
+            if(mainDataGb == null) {
                 mainDataGb = GameObject.Find("MainData");
             }
             return mainDataGb;
+        }
+    }
+    public static ViewRect ViewRect{
+        get{
+            return MainDataGb.GetComponent<ViewRect>();
         }
     }
     public static MainData MainData{
@@ -28,41 +32,23 @@ public class Singleton{
     }
     public static Precalculate Precalculate{
         get{
-            if(precalculate == null){
+            if(precalculate == null) {
                 precalculate = GameObject.Find("Algorithm2").GetComponent<Precalculate>();
             }
             return precalculate;
         }
     }
-    public static void DrawABeaultifulButton(IndexOfList2D pos, Color color, System.Action pushButton){
-        Handles.color = color;
-        if(Handles.Button(MainData.AreaPosWorld(pos), Quaternion.identity, 0.5f, 0.5f, Handles.CylinderHandleCap)){
-            if(pushButton != null){
-                pushButton();
-            }
-        }
-    }
-    public static void DrawABeautifulSmallButton(IndexOfList2D pos, Color color, System.Action pushButton){
-        Handles.color = color;
-        if(Handles.Button(MainData.AreaPosWorld(pos), Quaternion.identity, 0.5f, 0.5f, Handles.ArrowHandleCap)){
-            if(pushButton != null){
-                pushButton();
-            }
-        }
-    }
-    public static void DrawABeaultifulLabel(IndexOfList2D pos, string text){
-        Handles.Label(MainData.AreaPosWorld(pos), text);
-    }
-    public static void DestroyAllChilds(Transform parent){
+    
+    public static void DestroyAllChilds(Transform parent) {
         int count = parent.childCount;
-		for(int i = count - 1; i >= 0; i--){
+		for(int i = count - 1; i >= 0; i--) {
 			GameObject.Destroy(parent.GetChild(i).gameObject);
 		}
     }
-    public static List2DInt CreateNewList2DInt(){
+    public static List2DInt CreateNewList2DInt() {
         return new List2DInt(MainData.XSize, MainData.YSize, 0);
     }
-    public static void ResetFlipBoardAndRandomGenerateMineData(){
+    public static void ResetFlipBoardAndRandomGenerateMineData() {
         
     }
 }

@@ -14,10 +14,10 @@ public class ChangeMapMB : MonoBehaviour{
         precalculate = GetComponent<Precalculate>();
         Singleton.GamePart.clickAction += AfterClick;
     }
-    public void AfterClick(IndexOfList2D clickPos){
-        if(precalculate.problemsAndResults != null && precalculate.tableBase != null){
-            foreach(var search in precalculate.problemsAndResults.Values){
-                if(!search.isDead){
+    public void AfterClick(IndexOfList2D clickPos) {
+        if(precalculate.problemsAndResults != null && precalculate.tableBase != null) {
+            foreach(var search in precalculate.problemsAndResults.Values) {
+                if(!search.isDead) {
                     return;
                 }
             }
@@ -28,23 +28,23 @@ public class ChangeMapMB : MonoBehaviour{
             changeMap.ChangeMineData();
         }
     }
-    public void visualizedData(List<SetMap> setMaps){
+    public void visualizedData(List<SetMap> setMaps) {
         List<IndexOfList2D> emptyToMine = new List<IndexOfList2D>();
         List<IndexOfList2D> mineToEmpty = new List<IndexOfList2D>();
-        foreach(var setMap in setMaps){
+        foreach(var setMap in setMaps) {
             List2DInt mineData = Singleton.MainData.mineDatas;
-            if(mineData[setMap.pos] == -1 && setMap.value != -1){
+            if(mineData[setMap.pos] == -1 && setMap.value != -1) {
                 mineToEmpty.Add(setMap.pos);
-            }else if(mineData[setMap.pos] != -1 && setMap.value == -1){
+            }else if(mineData[setMap.pos] != -1 && setMap.value == -1) {
                 emptyToMine.Add(setMap.pos);
             }
         }
         GameObject gb = GameObject.Find("ChangeMapResult");
-        if(gb == null){
+        if(gb == null) {
             gb = new GameObject("ChangeMapResult");
         }
         ShowPositions sp = gb.GetComponent<ShowPositions>();
-        if(sp == null){
+        if(sp == null) {
             sp = gb.AddComponent<ShowPositions>();
         }
         sp.positionsList.Clear();
